@@ -20,7 +20,7 @@ pub struct NodeConnectionValue {
 impl NodeConnections {
     /// Get the connection count per node.
     /// Highest count will be the central node
-    pub fn get(nodes: &Vec<Node>, edges: &Vec<Edge>) -> Self {
+    pub fn get(nodes: &Vec<Node>, edges: &Vec<Edge>) -> anyhow::Result<Self> {
         let mut values: Vec<NodeConnectionValue> = Vec::new();
         let mut totals: HashSet<u32> = HashSet::new();
         for n in nodes {
@@ -37,10 +37,10 @@ impl NodeConnections {
         values.sort_by(|a, b| b.total.cmp(&a.total));
         let max_degree = totals.iter().max().unwrap_or(&0).to_owned();
         let min_degree = totals.iter().min().unwrap_or(&0).to_owned();
-        Self {
+        Ok(Self {
             max_degree,
             min_degree,
             values,
-        }
+        })
     }
 }

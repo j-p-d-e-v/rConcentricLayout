@@ -21,7 +21,7 @@ impl NormalizeNodeConnections {
     /// Normalize the node connections
     /// Formula: normalized_value = (degree - min_degree) / (max_degree - min_degree)
     /// degree - is the number of edges per nodes. Refer to the connections per node count
-    pub fn get(node_connections: &NodeConnections) -> Self {
+    pub fn get(node_connections: &NodeConnections) -> anyhow::Result<Self> {
         let mut values: Vec<NormalizedValue> = Vec::new();
         let max_degree = node_connections.max_degree;
         let min_degree = node_connections.min_degree;
@@ -43,6 +43,6 @@ impl NormalizeNodeConnections {
                 normalized_value,
             });
         }
-        Self { max_value, values }
+        Ok(Self { max_value, values })
     }
 }
