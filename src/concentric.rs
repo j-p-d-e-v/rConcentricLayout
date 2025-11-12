@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use crate::{
     Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Radius,
     RingIndexes,
@@ -5,7 +7,15 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct Timer {
+    pub micros: Option<u128>,
+    pub millis: Option<u128>,
+    pub seconds: Option<u64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Concentric {
+    pub timer: Timer,
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
     pub node_connections: NodeConnections,
@@ -35,13 +45,20 @@ impl Concentric {
     }
 
     pub fn get(&mut self) -> anyhow::Result<ConcetricData> {
+        let timer = Instant::now();
         self.count_node_connections()?;
         self.normalize_node_connections()?;
         self.calculate_rings_index()?;
         self.calculate_rings_radius()?;
         self.calculate_nodes_angle()?;
         self.calculate_nodes_coordinate()?;
+        let elapsed = timer.elapsed();
         let data = self.node_coordinates.clone();
+        self.timer = Timer {
+            micros: Some(elapsed.as_micros()),
+            millis: Some(elapsed.as_millis()),
+            seconds: Some(elapsed.as_secs()),
+        };
         Ok(ConcetricData {
             nodes: self.nodes.clone(),
             edges: self.edges.clone(),

@@ -1,0 +1,3765 @@
+{
+  "timer": {
+    "micros": 763,
+    "millis": 0,
+    "seconds": 0
+  },
+  "nodes": [
+    {
+      "id": "HIRA",
+      "label": "HIRA"
+    },
+    {
+      "id": "SERPINE1",
+      "label": "SERPINE1"
+    },
+    {
+      "id": "FAS",
+      "label": "FAS"
+    },
+    {
+      "id": "H1F0",
+      "label": "H1F0"
+    },
+    {
+      "id": "CHEK2",
+      "label": "CHEK2"
+    },
+    {
+      "id": "COL18A1",
+      "label": "COL18A1"
+    },
+    {
+      "id": "CREBBP",
+      "label": "CREBBP"
+    },
+    {
+      "id": "FDXR",
+      "label": "FDXR"
+    },
+    {
+      "id": "SMYD2",
+      "label": "SMYD2"
+    },
+    {
+      "id": "ATR",
+      "label": "ATR"
+    },
+    {
+      "id": "HGF",
+      "label": "HGF"
+    },
+    {
+      "id": "ATM",
+      "label": "ATM"
+    },
+    {
+      "id": "TP63",
+      "label": "TP63"
+    },
+    {
+      "id": "GPX1",
+      "label": "GPX1"
+    },
+    {
+      "id": "TRIAP1",
+      "label": "TRIAP1"
+    },
+    {
+      "id": "HIST1H1E",
+      "label": "HIST1H1E"
+    },
+    {
+      "id": "HIST1H1D",
+      "label": "HIST1H1D"
+    },
+    {
+      "id": "HIST1H1C",
+      "label": "HIST1H1C"
+    },
+    {
+      "id": "HIST1H1B",
+      "label": "HIST1H1B"
+    },
+    {
+      "id": "HIST1H1A",
+      "label": "HIST1H1A"
+    },
+    {
+      "id": "TP53",
+      "label": "TP53"
+    },
+    {
+      "id": "GADD45A",
+      "label": "GADD45A"
+    },
+    {
+      "id": "PML",
+      "label": "PML"
+    },
+    {
+      "id": "SUMO1",
+      "label": "SUMO1"
+    },
+    {
+      "id": "PPP2CA",
+      "label": "PPP2CA"
+    },
+    {
+      "id": "PPP2CB",
+      "label": "PPP2CB"
+    },
+    {
+      "id": "PRKAA1",
+      "label": "PRKAA1"
+    },
+    {
+      "id": "PRKAA2",
+      "label": "PRKAA2"
+    },
+    {
+      "id": "MAPK11",
+      "label": "MAPK11"
+    },
+    {
+      "id": "TP73",
+      "label": "TP73"
+    },
+    {
+      "id": "CCNB1",
+      "label": "CCNB1"
+    },
+    {
+      "id": "MAPK12",
+      "label": "MAPK12"
+    },
+    {
+      "id": "MAPK13",
+      "label": "MAPK13"
+    },
+    {
+      "id": "MAPK14",
+      "label": "MAPK14"
+    },
+    {
+      "id": "PRKAB2",
+      "label": "PRKAB2"
+    },
+    {
+      "id": "PRKAB1",
+      "label": "PRKAB1"
+    },
+    {
+      "id": "EP300",
+      "label": "EP300"
+    },
+    {
+      "id": "IGBP1",
+      "label": "IGBP1"
+    },
+    {
+      "id": "FBXO11",
+      "label": "FBXO11"
+    },
+    {
+      "id": "HMGB1",
+      "label": "HMGB1"
+    },
+    {
+      "id": "NEDD8",
+      "label": "NEDD8"
+    },
+    {
+      "id": "ASF1A",
+      "label": "ASF1A"
+    },
+    {
+      "id": "KAT8",
+      "label": "KAT8"
+    },
+    {
+      "id": "HTT",
+      "label": "HTT"
+    },
+    {
+      "id": "WRN",
+      "label": "WRN"
+    },
+    {
+      "id": "CDKN1A",
+      "label": "CDKN1A"
+    },
+    {
+      "id": "PLK3",
+      "label": "PLK3"
+    },
+    {
+      "id": "DYRK1A",
+      "label": "DYRK1A"
+    },
+    {
+      "id": "PRKAG1",
+      "label": "PRKAG1"
+    },
+    {
+      "id": "CASP6",
+      "label": "CASP6"
+    },
+    {
+      "id": "MAX",
+      "label": "MAX"
+    },
+    {
+      "id": "FOS",
+      "label": "FOS"
+    },
+    {
+      "id": "TP53I3",
+      "label": "TP53I3"
+    },
+    {
+      "id": "PRMT1",
+      "label": "PRMT1"
+    },
+    {
+      "id": "PCBP4",
+      "label": "PCBP4"
+    },
+    {
+      "id": "PRMT5",
+      "label": "PRMT5"
+    },
+    {
+      "id": "E4F1",
+      "label": "E4F1"
+    },
+    {
+      "id": "CASP1",
+      "label": "CASP1"
+    },
+    {
+      "id": "PRKCA",
+      "label": "PRKCA"
+    },
+    {
+      "id": "CDK1",
+      "label": "CDK1"
+    },
+    {
+      "id": "CDK9",
+      "label": "CDK9"
+    },
+    {
+      "id": "RB1",
+      "label": "RB1"
+    },
+    {
+      "id": "CDK7",
+      "label": "CDK7"
+    },
+    {
+      "id": "HMGA2",
+      "label": "HMGA2"
+    },
+    {
+      "id": "DAPK3",
+      "label": "DAPK3"
+    },
+    {
+      "id": "HMGA1",
+      "label": "HMGA1"
+    },
+    {
+      "id": "PRKCD",
+      "label": "PRKCD"
+    },
+    {
+      "id": "UBN1",
+      "label": "UBN1"
+    },
+    {
+      "id": "CDK5",
+      "label": "CDK5"
+    },
+    {
+      "id": "CDK2",
+      "label": "CDK2"
+    },
+    {
+      "id": "DAPK1",
+      "label": "DAPK1"
+    },
+    {
+      "id": "RFWD2",
+      "label": "RFWD2"
+    },
+    {
+      "id": "PPM1J",
+      "label": "PPM1J"
+    },
+    {
+      "id": "BTG2",
+      "label": "BTG2"
+    },
+    {
+      "id": "CD82",
+      "label": "CD82"
+    },
+    {
+      "id": "HIPK2",
+      "label": "HIPK2"
+    },
+    {
+      "id": "DDB2",
+      "label": "DDB2"
+    },
+    {
+      "id": "MDM2",
+      "label": "MDM2"
+    },
+    {
+      "id": "CTSD",
+      "label": "CTSD"
+    },
+    {
+      "id": "NGFR",
+      "label": "NGFR"
+    },
+    {
+      "id": "CARM1",
+      "label": "CARM1"
+    },
+    {
+      "id": "TYRP1",
+      "label": "TYRP1"
+    },
+    {
+      "id": "PRKDC",
+      "label": "PRKDC"
+    },
+    {
+      "id": "HIC1",
+      "label": "HIC1"
+    },
+    {
+      "id": "TAP1",
+      "label": "TAP1"
+    },
+    {
+      "id": "PYCARD",
+      "label": "PYCARD"
+    },
+    {
+      "id": "APC",
+      "label": "APC"
+    },
+    {
+      "id": "RNF144B",
+      "label": "RNF144B"
+    },
+    {
+      "id": "KAT2B",
+      "label": "KAT2B"
+    },
+    {
+      "id": "MSH2",
+      "label": "MSH2"
+    },
+    {
+      "id": "PPP1R13L",
+      "label": "PPP1R13L"
+    },
+    {
+      "id": "SIRT1",
+      "label": "SIRT1"
+    },
+    {
+      "id": "CASP10",
+      "label": "CASP10"
+    },
+    {
+      "id": "SP1",
+      "label": "SP1"
+    },
+    {
+      "id": "IRF5",
+      "label": "IRF5"
+    },
+    {
+      "id": "BAX",
+      "label": "BAX"
+    },
+    {
+      "id": "CABIN1",
+      "label": "CABIN1"
+    },
+    {
+      "id": "SETD7",
+      "label": "SETD7"
+    },
+    {
+      "id": "SETD8",
+      "label": "SETD8"
+    },
+    {
+      "id": "APAF1",
+      "label": "APAF1"
+    },
+    {
+      "id": "GDF15",
+      "label": "GDF15"
+    }
+  ],
+  "edges": [
+    {
+      "id": "TP53-controls-state-change-of-H1F0",
+      "source": "TP53",
+      "target": "H1F0"
+    },
+    {
+      "id": "TP53-controls-expression-of-IRF5",
+      "source": "TP53",
+      "target": "IRF5"
+    },
+    {
+      "id": "KAT8-controls-state-change-of-TP53",
+      "source": "KAT8",
+      "target": "TP53"
+    },
+    {
+      "id": "FBXO11-controls-state-change-of-TP53",
+      "source": "FBXO11",
+      "target": "TP53"
+    },
+    {
+      "id": "ATR-controls-state-change-of-TP53",
+      "source": "ATR",
+      "target": "TP53"
+    },
+    {
+      "id": "FBXO11-controls-state-change-of-NEDD8",
+      "source": "FBXO11",
+      "target": "NEDD8"
+    },
+    {
+      "id": "ATM-controls-state-change-of-TP53",
+      "source": "ATM",
+      "target": "TP53"
+    },
+    {
+      "id": "SMYD2-controls-state-change-of-TP53",
+      "source": "SMYD2",
+      "target": "TP53"
+    },
+    {
+      "id": "NGFR-controls-state-change-of-TP53",
+      "source": "NGFR",
+      "target": "TP53"
+    },
+    {
+      "id": "MAX-controls-expression-of-TP53",
+      "source": "MAX",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-PRKAB1",
+      "source": "TP53",
+      "target": "PRKAB1"
+    },
+    {
+      "id": "MDM2-controls-state-change-of-TP53",
+      "source": "MDM2",
+      "target": "TP53"
+    },
+    {
+      "id": "SETD8-controls-state-change-of-TP53",
+      "source": "SETD8",
+      "target": "TP53"
+    },
+    {
+      "id": "SETD7-controls-state-change-of-TP53",
+      "source": "SETD7",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-TYRP1",
+      "source": "TP53",
+      "target": "TYRP1"
+    },
+    {
+      "id": "ATR-controls-state-change-of-TP63",
+      "source": "ATR",
+      "target": "TP63"
+    },
+    {
+      "id": "PRKCA-controls-state-change-of-TP53",
+      "source": "PRKCA",
+      "target": "TP53"
+    },
+    {
+      "id": "ATM-controls-state-change-of-TP63",
+      "source": "ATM",
+      "target": "TP63"
+    },
+    {
+      "id": "CHEK2-controls-state-change-of-TP73",
+      "source": "CHEK2",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-expression-of-DDB2",
+      "source": "TP53",
+      "target": "DDB2"
+    },
+    {
+      "id": "PRKCD-controls-state-change-of-TP53",
+      "source": "PRKCD",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-TP63",
+      "source": "TP53",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-PML",
+      "source": "TP53",
+      "target": "PML"
+    },
+    {
+      "id": "ATM-controls-state-change-of-TP73",
+      "source": "ATM",
+      "target": "TP73"
+    },
+    {
+      "id": "WRN-controls-state-change-of-TP63",
+      "source": "WRN",
+      "target": "TP63"
+    },
+    {
+      "id": "ATR-controls-state-change-of-TP73",
+      "source": "ATR",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-expression-of-PCBP4",
+      "source": "TP53",
+      "target": "PCBP4"
+    },
+    {
+      "id": "TP53-controls-expression-of-GADD45A",
+      "source": "TP53",
+      "target": "GADD45A"
+    },
+    {
+      "id": "PRKDC-controls-state-change-of-TP53",
+      "source": "PRKDC",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-GDF15",
+      "source": "TP53",
+      "target": "GDF15"
+    },
+    {
+      "id": "WRN-controls-state-change-of-TP73",
+      "source": "WRN",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-expression-of-SERPINE1",
+      "source": "TP53",
+      "target": "SERPINE1"
+    },
+    {
+      "id": "TP53-controls-expression-of-PPM1J",
+      "source": "TP53",
+      "target": "PPM1J"
+    },
+    {
+      "id": "HTT-controls-state-change-of-TP63",
+      "source": "HTT",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-CASP1",
+      "source": "TP53",
+      "target": "CASP1"
+    },
+    {
+      "id": "MAPK14-controls-state-change-of-TP63",
+      "source": "MAPK14",
+      "target": "TP63"
+    },
+    {
+      "id": "HMGB1-controls-state-change-of-TP73",
+      "source": "HMGB1",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-expression-of-CASP6",
+      "source": "TP53",
+      "target": "CASP6"
+    },
+    {
+      "id": "MAPK13-controls-state-change-of-TP63",
+      "source": "MAPK13",
+      "target": "TP63"
+    },
+    {
+      "id": "HTT-controls-state-change-of-TP53",
+      "source": "HTT",
+      "target": "TP53"
+    },
+    {
+      "id": "MAPK12-controls-state-change-of-TP63",
+      "source": "MAPK12",
+      "target": "TP63"
+    },
+    {
+      "id": "MAPK11-controls-state-change-of-TP63",
+      "source": "MAPK11",
+      "target": "TP63"
+    },
+    {
+      "id": "SIRT1-controls-expression-of-CDKN1A",
+      "source": "SIRT1",
+      "target": "CDKN1A"
+    },
+    {
+      "id": "PML-controls-state-change-of-TP53",
+      "source": "PML",
+      "target": "TP53"
+    },
+    {
+      "id": "CREBBP-controls-state-change-of-TP53",
+      "source": "CREBBP",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-TAP1",
+      "source": "TP53",
+      "target": "TAP1"
+    },
+    {
+      "id": "MAPK13-controls-state-change-of-TP53",
+      "source": "MAPK13",
+      "target": "TP53"
+    },
+    {
+      "id": "MAPK12-controls-state-change-of-TP53",
+      "source": "MAPK12",
+      "target": "TP53"
+    },
+    {
+      "id": "MAPK14-controls-state-change-of-TP53",
+      "source": "MAPK14",
+      "target": "TP53"
+    },
+    {
+      "id": "MAPK11-controls-state-change-of-TP53",
+      "source": "MAPK11",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-state-change-of-BAX",
+      "source": "TP53",
+      "target": "BAX"
+    },
+    {
+      "id": "HMGB1-controls-state-change-of-TP63",
+      "source": "HMGB1",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-TP73",
+      "source": "TP53",
+      "target": "TP73"
+    },
+    {
+      "id": "PML-controls-state-change-of-TP63",
+      "source": "PML",
+      "target": "TP63"
+    },
+    {
+      "id": "PPP2CA-controls-state-change-of-TP73",
+      "source": "PPP2CA",
+      "target": "TP73"
+    },
+    {
+      "id": "PPP2CB-controls-state-change-of-TP73",
+      "source": "PPP2CB",
+      "target": "TP73"
+    },
+    {
+      "id": "FOS-controls-expression-of-TP53",
+      "source": "FOS",
+      "target": "TP53"
+    },
+    {
+      "id": "CREBBP-controls-expression-of-GADD45A",
+      "source": "CREBBP",
+      "target": "GADD45A"
+    },
+    {
+      "id": "TP53-controls-expression-of-CDKN1A",
+      "source": "TP53",
+      "target": "CDKN1A"
+    },
+    {
+      "id": "PML-controls-state-change-of-TP73",
+      "source": "PML",
+      "target": "TP73"
+    },
+    {
+      "id": "HMGB1-controls-state-change-of-TP53",
+      "source": "HMGB1",
+      "target": "TP53"
+    },
+    {
+      "id": "IGBP1-controls-state-change-of-TP73",
+      "source": "IGBP1",
+      "target": "TP73"
+    },
+    {
+      "id": "HIPK2-controls-state-change-of-TP53",
+      "source": "HIPK2",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-RNF144B",
+      "source": "TP53",
+      "target": "RNF144B"
+    },
+    {
+      "id": "TP53-controls-expression-of-HIC1",
+      "source": "TP53",
+      "target": "HIC1"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIRA",
+      "source": "TP53",
+      "target": "HIRA"
+    },
+    {
+      "id": "MAPK14-controls-state-change-of-TP73",
+      "source": "MAPK14",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-state-change-of-UBN1",
+      "source": "TP53",
+      "target": "UBN1"
+    },
+    {
+      "id": "TP53-controls-expression-of-RB1",
+      "source": "TP53",
+      "target": "RB1"
+    },
+    {
+      "id": "MAPK11-controls-state-change-of-TP73",
+      "source": "MAPK11",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HMGA2",
+      "source": "TP53",
+      "target": "HMGA2"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HMGA1",
+      "source": "TP53",
+      "target": "HMGA1"
+    },
+    {
+      "id": "MAPK13-controls-state-change-of-TP73",
+      "source": "MAPK13",
+      "target": "TP73"
+    },
+    {
+      "id": "MAPK12-controls-state-change-of-TP73",
+      "source": "MAPK12",
+      "target": "TP73"
+    },
+    {
+      "id": "IGBP1-controls-state-change-of-TP63",
+      "source": "IGBP1",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-TP53I3",
+      "source": "TP53",
+      "target": "TP53I3"
+    },
+    {
+      "id": "DYRK1A-controls-state-change-of-TP53",
+      "source": "DYRK1A",
+      "target": "TP53"
+    },
+    {
+      "id": "SUMO1-controls-state-change-of-TP73",
+      "source": "SUMO1",
+      "target": "TP73"
+    },
+    {
+      "id": "PRKAG1-controls-state-change-of-TP63",
+      "source": "PRKAG1",
+      "target": "TP63"
+    },
+    {
+      "id": "SIRT1-controls-state-change-of-TP73",
+      "source": "SIRT1",
+      "target": "TP73"
+    },
+    {
+      "id": "PPP2CB-controls-state-change-of-TP63",
+      "source": "PPP2CB",
+      "target": "TP63"
+    },
+    {
+      "id": "CHEK2-controls-state-change-of-TP53",
+      "source": "CHEK2",
+      "target": "TP53"
+    },
+    {
+      "id": "PPP2CA-controls-state-change-of-TP63",
+      "source": "PPP2CA",
+      "target": "TP63"
+    },
+    {
+      "id": "CDK7-controls-state-change-of-TP53",
+      "source": "CDK7",
+      "target": "TP53"
+    },
+    {
+      "id": "CDK9-controls-state-change-of-TP53",
+      "source": "CDK9",
+      "target": "TP53"
+    },
+    {
+      "id": "CDK2-controls-state-change-of-TP53",
+      "source": "CDK2",
+      "target": "TP53"
+    },
+    {
+      "id": "CDK5-controls-state-change-of-TP53",
+      "source": "CDK5",
+      "target": "TP53"
+    },
+    {
+      "id": "IGBP1-controls-state-change-of-TP53",
+      "source": "IGBP1",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-BAX",
+      "source": "TP53",
+      "target": "BAX"
+    },
+    {
+      "id": "TP53-controls-expression-of-CCNB1",
+      "source": "TP53",
+      "target": "CCNB1"
+    },
+    {
+      "id": "SIRT1-controls-state-change-of-TP63",
+      "source": "SIRT1",
+      "target": "TP63"
+    },
+    {
+      "id": "PRKAG1-controls-state-change-of-TP73",
+      "source": "PRKAG1",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-expression-of-MDM2",
+      "source": "TP53",
+      "target": "MDM2"
+    },
+    {
+      "id": "PPP2CB-controls-state-change-of-TP53",
+      "source": "PPP2CB",
+      "target": "TP53"
+    },
+    {
+      "id": "PPP2CA-controls-state-change-of-TP53",
+      "source": "PPP2CA",
+      "target": "TP53"
+    },
+    {
+      "id": "CHEK2-controls-state-change-of-TP63",
+      "source": "CHEK2",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-CD82",
+      "source": "TP53",
+      "target": "CD82"
+    },
+    {
+      "id": "TP53-controls-expression-of-FDXR",
+      "source": "TP53",
+      "target": "FDXR"
+    },
+    {
+      "id": "TP53-controls-expression-of-HTT",
+      "source": "TP53",
+      "target": "HTT"
+    },
+    {
+      "id": "TP53-controls-expression-of-CTSD",
+      "source": "TP53",
+      "target": "CTSD"
+    },
+    {
+      "id": "SIRT1-controls-state-change-of-TP53",
+      "source": "SIRT1",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-CASP10",
+      "source": "TP53",
+      "target": "CASP10"
+    },
+    {
+      "id": "TP53-controls-expression-of-APAF1",
+      "source": "TP53",
+      "target": "APAF1"
+    },
+    {
+      "id": "TP53-controls-expression-of-HGF",
+      "source": "TP53",
+      "target": "HGF"
+    },
+    {
+      "id": "PRMT5-controls-state-change-of-TP53",
+      "source": "PRMT5",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-APC",
+      "source": "TP53",
+      "target": "APC"
+    },
+    {
+      "id": "TP53-controls-expression-of-BTG2",
+      "source": "TP53",
+      "target": "BTG2"
+    },
+    {
+      "id": "PRMT1-controls-expression-of-GADD45A",
+      "source": "PRMT1",
+      "target": "GADD45A"
+    },
+    {
+      "id": "TP53-controls-state-change-of-ASF1A",
+      "source": "TP53",
+      "target": "ASF1A"
+    },
+    {
+      "id": "TP53-controls-expression-of-FAS",
+      "source": "TP53",
+      "target": "FAS"
+    },
+    {
+      "id": "HTT-controls-state-change-of-TP73",
+      "source": "HTT",
+      "target": "TP73"
+    },
+    {
+      "id": "PRKAG1-controls-state-change-of-TP53",
+      "source": "PRKAG1",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-TRIAP1",
+      "source": "TP53",
+      "target": "TRIAP1"
+    },
+    {
+      "id": "TP53-controls-expression-of-RFWD2",
+      "source": "TP53",
+      "target": "RFWD2"
+    },
+    {
+      "id": "EP300-controls-state-change-of-TP63",
+      "source": "EP300",
+      "target": "TP63"
+    },
+    {
+      "id": "TP53-controls-expression-of-COL18A1",
+      "source": "TP53",
+      "target": "COL18A1"
+    },
+    {
+      "id": "EP300-controls-expression-of-GADD45A",
+      "source": "EP300",
+      "target": "GADD45A"
+    },
+    {
+      "id": "PRKAB2-controls-state-change-of-TP73",
+      "source": "PRKAB2",
+      "target": "TP73"
+    },
+    {
+      "id": "EP300-controls-state-change-of-TP53",
+      "source": "EP300",
+      "target": "TP53"
+    },
+    {
+      "id": "PRKAB1-controls-state-change-of-TP73",
+      "source": "PRKAB1",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIST1H1B",
+      "source": "TP53",
+      "target": "HIST1H1B"
+    },
+    {
+      "id": "EP300-controls-state-change-of-TP73",
+      "source": "EP300",
+      "target": "TP73"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIST1H1C",
+      "source": "TP53",
+      "target": "HIST1H1C"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIST1H1A",
+      "source": "TP53",
+      "target": "HIST1H1A"
+    },
+    {
+      "id": "CARM1-controls-expression-of-GADD45A",
+      "source": "CARM1",
+      "target": "GADD45A"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIST1H1D",
+      "source": "TP53",
+      "target": "HIST1H1D"
+    },
+    {
+      "id": "TP53-controls-state-change-of-HIST1H1E",
+      "source": "TP53",
+      "target": "HIST1H1E"
+    },
+    {
+      "id": "WRN-controls-state-change-of-TP53",
+      "source": "WRN",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-MSH2",
+      "source": "TP53",
+      "target": "MSH2"
+    },
+    {
+      "id": "KAT2B-controls-state-change-of-TP53",
+      "source": "KAT2B",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-PYCARD",
+      "source": "TP53",
+      "target": "PYCARD"
+    },
+    {
+      "id": "PRKAA2-controls-state-change-of-TP53",
+      "source": "PRKAA2",
+      "target": "TP53"
+    },
+    {
+      "id": "SP1-controls-expression-of-CCNB1",
+      "source": "SP1",
+      "target": "CCNB1"
+    },
+    {
+      "id": "PRKAA1-controls-state-change-of-TP53",
+      "source": "PRKAA1",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-GPX1",
+      "source": "TP53",
+      "target": "GPX1"
+    },
+    {
+      "id": "TP53-controls-state-change-of-CABIN1",
+      "source": "TP53",
+      "target": "CABIN1"
+    },
+    {
+      "id": "MDM2-controls-state-change-of-NEDD8",
+      "source": "MDM2",
+      "target": "NEDD8"
+    },
+    {
+      "id": "PLK3-controls-state-change-of-TP53",
+      "source": "PLK3",
+      "target": "TP53"
+    },
+    {
+      "id": "PRKAB1-controls-state-change-of-TP53",
+      "source": "PRKAB1",
+      "target": "TP53"
+    },
+    {
+      "id": "SUMO1-controls-state-change-of-TP53",
+      "source": "SUMO1",
+      "target": "TP53"
+    },
+    {
+      "id": "PRKAA1-controls-state-change-of-TP63",
+      "source": "PRKAA1",
+      "target": "TP63"
+    },
+    {
+      "id": "PPP1R13L-controls-state-change-of-TP53",
+      "source": "PPP1R13L",
+      "target": "TP53"
+    },
+    {
+      "id": "TP53-controls-expression-of-PLK3",
+      "source": "TP53",
+      "target": "PLK3"
+    },
+    {
+      "id": "PRKAA2-controls-state-change-of-TP63",
+      "source": "PRKAA2",
+      "target": "TP63"
+    },
+    {
+      "id": "PRKAB2-controls-state-change-of-TP53",
+      "source": "PRKAB2",
+      "target": "TP53"
+    },
+    {
+      "id": "DAPK1-controls-state-change-of-TP53",
+      "source": "DAPK1",
+      "target": "TP53"
+    },
+    {
+      "id": "CDK1-controls-state-change-of-TP53",
+      "source": "CDK1",
+      "target": "TP53"
+    },
+    {
+      "id": "DAPK3-controls-state-change-of-TP53",
+      "source": "DAPK3",
+      "target": "TP53"
+    },
+    {
+      "id": "PRKAB1-controls-state-change-of-TP63",
+      "source": "PRKAB1",
+      "target": "TP63"
+    },
+    {
+      "id": "SUMO1-controls-state-change-of-TP63",
+      "source": "SUMO1",
+      "target": "TP63"
+    },
+    {
+      "id": "PRKAA1-controls-state-change-of-TP73",
+      "source": "PRKAA1",
+      "target": "TP73"
+    },
+    {
+      "id": "E4F1-controls-state-change-of-TP53",
+      "source": "E4F1",
+      "target": "TP53"
+    },
+    {
+      "id": "PRKAA2-controls-state-change-of-TP73",
+      "source": "PRKAA2",
+      "target": "TP73"
+    },
+    {
+      "id": "PRKAB2-controls-state-change-of-TP63",
+      "source": "PRKAB2",
+      "target": "TP63"
+    }
+  ],
+  "node_connections": {
+    "max_degree": 102,
+    "min_degree": 1,
+    "values": [
+      {
+        "node_id": "TP53",
+        "total": 102
+      },
+      {
+        "node_id": "TP63",
+        "total": 23
+      },
+      {
+        "node_id": "TP73",
+        "total": 23
+      },
+      {
+        "node_id": "GADD45A",
+        "total": 5
+      },
+      {
+        "node_id": "PML",
+        "total": 4
+      },
+      {
+        "node_id": "PRKAB1",
+        "total": 4
+      },
+      {
+        "node_id": "EP300",
+        "total": 4
+      },
+      {
+        "node_id": "HTT",
+        "total": 4
+      },
+      {
+        "node_id": "SIRT1",
+        "total": 4
+      },
+      {
+        "node_id": "CHEK2",
+        "total": 3
+      },
+      {
+        "node_id": "ATR",
+        "total": 3
+      },
+      {
+        "node_id": "ATM",
+        "total": 3
+      },
+      {
+        "node_id": "SUMO1",
+        "total": 3
+      },
+      {
+        "node_id": "PPP2CA",
+        "total": 3
+      },
+      {
+        "node_id": "PPP2CB",
+        "total": 3
+      },
+      {
+        "node_id": "PRKAA1",
+        "total": 3
+      },
+      {
+        "node_id": "PRKAA2",
+        "total": 3
+      },
+      {
+        "node_id": "MAPK11",
+        "total": 3
+      },
+      {
+        "node_id": "MAPK12",
+        "total": 3
+      },
+      {
+        "node_id": "MAPK13",
+        "total": 3
+      },
+      {
+        "node_id": "MAPK14",
+        "total": 3
+      },
+      {
+        "node_id": "PRKAB2",
+        "total": 3
+      },
+      {
+        "node_id": "IGBP1",
+        "total": 3
+      },
+      {
+        "node_id": "HMGB1",
+        "total": 3
+      },
+      {
+        "node_id": "WRN",
+        "total": 3
+      },
+      {
+        "node_id": "PRKAG1",
+        "total": 3
+      },
+      {
+        "node_id": "MDM2",
+        "total": 3
+      },
+      {
+        "node_id": "CREBBP",
+        "total": 2
+      },
+      {
+        "node_id": "CCNB1",
+        "total": 2
+      },
+      {
+        "node_id": "FBXO11",
+        "total": 2
+      },
+      {
+        "node_id": "NEDD8",
+        "total": 2
+      },
+      {
+        "node_id": "CDKN1A",
+        "total": 2
+      },
+      {
+        "node_id": "PLK3",
+        "total": 2
+      },
+      {
+        "node_id": "BAX",
+        "total": 2
+      },
+      {
+        "node_id": "HIRA",
+        "total": 1
+      },
+      {
+        "node_id": "SERPINE1",
+        "total": 1
+      },
+      {
+        "node_id": "FAS",
+        "total": 1
+      },
+      {
+        "node_id": "H1F0",
+        "total": 1
+      },
+      {
+        "node_id": "COL18A1",
+        "total": 1
+      },
+      {
+        "node_id": "FDXR",
+        "total": 1
+      },
+      {
+        "node_id": "SMYD2",
+        "total": 1
+      },
+      {
+        "node_id": "HGF",
+        "total": 1
+      },
+      {
+        "node_id": "GPX1",
+        "total": 1
+      },
+      {
+        "node_id": "TRIAP1",
+        "total": 1
+      },
+      {
+        "node_id": "HIST1H1E",
+        "total": 1
+      },
+      {
+        "node_id": "HIST1H1D",
+        "total": 1
+      },
+      {
+        "node_id": "HIST1H1C",
+        "total": 1
+      },
+      {
+        "node_id": "HIST1H1B",
+        "total": 1
+      },
+      {
+        "node_id": "HIST1H1A",
+        "total": 1
+      },
+      {
+        "node_id": "ASF1A",
+        "total": 1
+      },
+      {
+        "node_id": "KAT8",
+        "total": 1
+      },
+      {
+        "node_id": "DYRK1A",
+        "total": 1
+      },
+      {
+        "node_id": "CASP6",
+        "total": 1
+      },
+      {
+        "node_id": "MAX",
+        "total": 1
+      },
+      {
+        "node_id": "FOS",
+        "total": 1
+      },
+      {
+        "node_id": "TP53I3",
+        "total": 1
+      },
+      {
+        "node_id": "PRMT1",
+        "total": 1
+      },
+      {
+        "node_id": "PCBP4",
+        "total": 1
+      },
+      {
+        "node_id": "PRMT5",
+        "total": 1
+      },
+      {
+        "node_id": "E4F1",
+        "total": 1
+      },
+      {
+        "node_id": "CASP1",
+        "total": 1
+      },
+      {
+        "node_id": "PRKCA",
+        "total": 1
+      },
+      {
+        "node_id": "CDK1",
+        "total": 1
+      },
+      {
+        "node_id": "CDK9",
+        "total": 1
+      },
+      {
+        "node_id": "RB1",
+        "total": 1
+      },
+      {
+        "node_id": "CDK7",
+        "total": 1
+      },
+      {
+        "node_id": "HMGA2",
+        "total": 1
+      },
+      {
+        "node_id": "DAPK3",
+        "total": 1
+      },
+      {
+        "node_id": "HMGA1",
+        "total": 1
+      },
+      {
+        "node_id": "PRKCD",
+        "total": 1
+      },
+      {
+        "node_id": "UBN1",
+        "total": 1
+      },
+      {
+        "node_id": "CDK5",
+        "total": 1
+      },
+      {
+        "node_id": "CDK2",
+        "total": 1
+      },
+      {
+        "node_id": "DAPK1",
+        "total": 1
+      },
+      {
+        "node_id": "RFWD2",
+        "total": 1
+      },
+      {
+        "node_id": "PPM1J",
+        "total": 1
+      },
+      {
+        "node_id": "BTG2",
+        "total": 1
+      },
+      {
+        "node_id": "CD82",
+        "total": 1
+      },
+      {
+        "node_id": "HIPK2",
+        "total": 1
+      },
+      {
+        "node_id": "DDB2",
+        "total": 1
+      },
+      {
+        "node_id": "CTSD",
+        "total": 1
+      },
+      {
+        "node_id": "NGFR",
+        "total": 1
+      },
+      {
+        "node_id": "CARM1",
+        "total": 1
+      },
+      {
+        "node_id": "TYRP1",
+        "total": 1
+      },
+      {
+        "node_id": "PRKDC",
+        "total": 1
+      },
+      {
+        "node_id": "HIC1",
+        "total": 1
+      },
+      {
+        "node_id": "TAP1",
+        "total": 1
+      },
+      {
+        "node_id": "PYCARD",
+        "total": 1
+      },
+      {
+        "node_id": "APC",
+        "total": 1
+      },
+      {
+        "node_id": "RNF144B",
+        "total": 1
+      },
+      {
+        "node_id": "KAT2B",
+        "total": 1
+      },
+      {
+        "node_id": "MSH2",
+        "total": 1
+      },
+      {
+        "node_id": "PPP1R13L",
+        "total": 1
+      },
+      {
+        "node_id": "CASP10",
+        "total": 1
+      },
+      {
+        "node_id": "SP1",
+        "total": 1
+      },
+      {
+        "node_id": "IRF5",
+        "total": 1
+      },
+      {
+        "node_id": "CABIN1",
+        "total": 1
+      },
+      {
+        "node_id": "SETD7",
+        "total": 1
+      },
+      {
+        "node_id": "SETD8",
+        "total": 1
+      },
+      {
+        "node_id": "APAF1",
+        "total": 1
+      },
+      {
+        "node_id": "GDF15",
+        "total": 1
+      }
+    ]
+  },
+  "normalized_values": {
+    "max_value": 1.0,
+    "values": [
+      {
+        "node_id": "TP53",
+        "degree": 102,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 1.0
+      },
+      {
+        "node_id": "TP63",
+        "degree": 23,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.21782178
+      },
+      {
+        "node_id": "TP73",
+        "degree": 23,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.21782178
+      },
+      {
+        "node_id": "GADD45A",
+        "degree": 5,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.03960396
+      },
+      {
+        "node_id": "PML",
+        "degree": 4,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.02970297
+      },
+      {
+        "node_id": "PRKAB1",
+        "degree": 4,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.02970297
+      },
+      {
+        "node_id": "EP300",
+        "degree": 4,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.02970297
+      },
+      {
+        "node_id": "HTT",
+        "degree": 4,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.02970297
+      },
+      {
+        "node_id": "SIRT1",
+        "degree": 4,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.02970297
+      },
+      {
+        "node_id": "CHEK2",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "ATR",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "ATM",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "SUMO1",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PPP2CA",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PPP2CB",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PRKAA1",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PRKAA2",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "MAPK11",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "MAPK12",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "MAPK13",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "MAPK14",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PRKAB2",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "IGBP1",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "HMGB1",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "WRN",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "PRKAG1",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "MDM2",
+        "degree": 3,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.01980198
+      },
+      {
+        "node_id": "CREBBP",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "CCNB1",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "FBXO11",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "NEDD8",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "CDKN1A",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "PLK3",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "BAX",
+        "degree": 2,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.00990099
+      },
+      {
+        "node_id": "HIRA",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "SERPINE1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "FAS",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "H1F0",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "COL18A1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "FDXR",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "SMYD2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HGF",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "GPX1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "TRIAP1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIST1H1E",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIST1H1D",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIST1H1C",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIST1H1B",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIST1H1A",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "ASF1A",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "KAT8",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "DYRK1A",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CASP6",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "MAX",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "FOS",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "TP53I3",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PRMT1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PCBP4",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PRMT5",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "E4F1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CASP1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PRKCA",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CDK1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CDK9",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "RB1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CDK7",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HMGA2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "DAPK3",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HMGA1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PRKCD",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "UBN1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CDK5",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CDK2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "DAPK1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "RFWD2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PPM1J",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "BTG2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CD82",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIPK2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "DDB2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CTSD",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "NGFR",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CARM1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "TYRP1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PRKDC",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "HIC1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "TAP1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PYCARD",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "APC",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "RNF144B",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "KAT2B",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "MSH2",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "PPP1R13L",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CASP10",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "SP1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "IRF5",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "CABIN1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "SETD7",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "SETD8",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "APAF1",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      },
+      {
+        "node_id": "GDF15",
+        "degree": 1,
+        "max_degree": 102,
+        "min_degree": 1,
+        "normalized_value": 0.0
+      }
+    ]
+  },
+  "node_angles": [
+    {
+      "node": "TP53",
+      "angle_radian": 0.0,
+      "angle_degree": 0.0
+    },
+    {
+      "node": "TP63",
+      "angle_radian": 0.0,
+      "angle_degree": 0.0
+    },
+    {
+      "node": "TP73",
+      "angle_radian": 0.45219898,
+      "angle_degree": 25.909092
+    },
+    {
+      "node": "GADD45A",
+      "angle_radian": 0.90439796,
+      "angle_degree": 51.818184
+    },
+    {
+      "node": "PML",
+      "angle_radian": 1.356597,
+      "angle_degree": 77.72727
+    },
+    {
+      "node": "PRKAB1",
+      "angle_radian": 1.8087959,
+      "angle_degree": 103.63637
+    },
+    {
+      "node": "EP300",
+      "angle_radian": 2.2609947,
+      "angle_degree": 129.54544
+    },
+    {
+      "node": "HTT",
+      "angle_radian": 2.713194,
+      "angle_degree": 155.45454
+    },
+    {
+      "node": "SIRT1",
+      "angle_radian": 3.1653926,
+      "angle_degree": 181.36363
+    },
+    {
+      "node": "CHEK2",
+      "angle_radian": 3.6175919,
+      "angle_degree": 207.27274
+    },
+    {
+      "node": "ATR",
+      "angle_radian": 4.069791,
+      "angle_degree": 233.18182
+    },
+    {
+      "node": "ATM",
+      "angle_radian": 4.5219893,
+      "angle_degree": 259.09088
+    },
+    {
+      "node": "SUMO1",
+      "angle_radian": 4.9741883,
+      "angle_degree": 284.99997
+    },
+    {
+      "node": "PPP2CA",
+      "angle_radian": 5.426388,
+      "angle_degree": 310.9091
+    },
+    {
+      "node": "PPP2CB",
+      "angle_radian": 5.878587,
+      "angle_degree": 336.8182
+    },
+    {
+      "node": "PRKAA1",
+      "angle_radian": 6.3307853,
+      "angle_degree": 362.72726
+    },
+    {
+      "node": "PRKAA2",
+      "angle_radian": 6.7829843,
+      "angle_degree": 388.63635
+    },
+    {
+      "node": "MAPK11",
+      "angle_radian": 7.2351837,
+      "angle_degree": 414.54547
+    },
+    {
+      "node": "MAPK12",
+      "angle_radian": 7.6873817,
+      "angle_degree": 440.4545
+    },
+    {
+      "node": "MAPK13",
+      "angle_radian": 8.139582,
+      "angle_degree": 466.36365
+    },
+    {
+      "node": "MAPK14",
+      "angle_radian": 8.59178,
+      "angle_degree": 492.27267
+    },
+    {
+      "node": "PRKAB2",
+      "angle_radian": 9.043979,
+      "angle_degree": 518.18176
+    },
+    {
+      "node": "IGBP1",
+      "angle_radian": 9.496178,
+      "angle_degree": 544.0909
+    },
+    {
+      "node": "HMGB1",
+      "angle_radian": 9.948377,
+      "angle_degree": 569.99994
+    },
+    {
+      "node": "WRN",
+      "angle_radian": 10.400576,
+      "angle_degree": 595.90906
+    },
+    {
+      "node": "PRKAG1",
+      "angle_radian": 10.852776,
+      "angle_degree": 621.8182
+    },
+    {
+      "node": "MDM2",
+      "angle_radian": 11.304974,
+      "angle_degree": 647.72723
+    },
+    {
+      "node": "CREBBP",
+      "angle_radian": 11.757174,
+      "angle_degree": 673.6364
+    },
+    {
+      "node": "CCNB1",
+      "angle_radian": 12.209372,
+      "angle_degree": 699.5454
+    },
+    {
+      "node": "FBXO11",
+      "angle_radian": 12.661571,
+      "angle_degree": 725.4545
+    },
+    {
+      "node": "NEDD8",
+      "angle_radian": 13.11377,
+      "angle_degree": 751.3636
+    },
+    {
+      "node": "CDKN1A",
+      "angle_radian": 13.5659685,
+      "angle_degree": 777.2727
+    },
+    {
+      "node": "PLK3",
+      "angle_radian": 14.0181675,
+      "angle_degree": 803.18176
+    },
+    {
+      "node": "BAX",
+      "angle_radian": 14.470367,
+      "angle_degree": 829.09094
+    },
+    {
+      "node": "HIRA",
+      "angle_radian": 0.0,
+      "angle_degree": 0.0
+    },
+    {
+      "node": "SERPINE1",
+      "angle_radian": 0.35557827,
+      "angle_degree": 20.373133
+    },
+    {
+      "node": "FAS",
+      "angle_radian": 0.71115655,
+      "angle_degree": 40.746265
+    },
+    {
+      "node": "H1F0",
+      "angle_radian": 1.0667348,
+      "angle_degree": 61.119396
+    },
+    {
+      "node": "COL18A1",
+      "angle_radian": 1.4223131,
+      "angle_degree": 81.49253
+    },
+    {
+      "node": "FDXR",
+      "angle_radian": 1.7778914,
+      "angle_degree": 101.86567
+    },
+    {
+      "node": "SMYD2",
+      "angle_radian": 2.1334696,
+      "angle_degree": 122.23879
+    },
+    {
+      "node": "HGF",
+      "angle_radian": 2.489048,
+      "angle_degree": 142.61194
+    },
+    {
+      "node": "GPX1",
+      "angle_radian": 2.8446262,
+      "angle_degree": 162.98506
+    },
+    {
+      "node": "TRIAP1",
+      "angle_radian": 3.2002046,
+      "angle_degree": 183.35822
+    },
+    {
+      "node": "HIST1H1E",
+      "angle_radian": 3.5557828,
+      "angle_degree": 203.73134
+    },
+    {
+      "node": "HIST1H1D",
+      "angle_radian": 3.9113607,
+      "angle_degree": 224.10445
+    },
+    {
+      "node": "HIST1H1C",
+      "angle_radian": 4.266939,
+      "angle_degree": 244.47758
+    },
+    {
+      "node": "HIST1H1B",
+      "angle_radian": 4.6225176,
+      "angle_degree": 264.85074
+    },
+    {
+      "node": "HIST1H1A",
+      "angle_radian": 4.978096,
+      "angle_degree": 285.22388
+    },
+    {
+      "node": "ASF1A",
+      "angle_radian": 5.333674,
+      "angle_degree": 305.597
+    },
+    {
+      "node": "KAT8",
+      "angle_radian": 5.6892524,
+      "angle_degree": 325.97012
+    },
+    {
+      "node": "DYRK1A",
+      "angle_radian": 6.044831,
+      "angle_degree": 346.34326
+    },
+    {
+      "node": "CASP6",
+      "angle_radian": 6.400409,
+      "angle_degree": 366.71643
+    },
+    {
+      "node": "MAX",
+      "angle_radian": 6.755987,
+      "angle_degree": 387.08954
+    },
+    {
+      "node": "FOS",
+      "angle_radian": 7.1115656,
+      "angle_degree": 407.46268
+    },
+    {
+      "node": "TP53I3",
+      "angle_radian": 7.4671435,
+      "angle_degree": 427.8358
+    },
+    {
+      "node": "PRMT1",
+      "angle_radian": 7.8227215,
+      "angle_degree": 448.2089
+    },
+    {
+      "node": "PCBP4",
+      "angle_radian": 8.1783,
+      "angle_degree": 468.58203
+    },
+    {
+      "node": "PRMT5",
+      "angle_radian": 8.533878,
+      "angle_degree": 488.95517
+    },
+    {
+      "node": "E4F1",
+      "angle_radian": 8.889457,
+      "angle_degree": 509.32834
+    },
+    {
+      "node": "CASP1",
+      "angle_radian": 9.245035,
+      "angle_degree": 529.7015
+    },
+    {
+      "node": "PRKCA",
+      "angle_radian": 9.600614,
+      "angle_degree": 550.0746
+    },
+    {
+      "node": "CDK1",
+      "angle_radian": 9.956192,
+      "angle_degree": 570.44775
+    },
+    {
+      "node": "CDK9",
+      "angle_radian": 10.3117695,
+      "angle_degree": 590.82086
+    },
+    {
+      "node": "RB1",
+      "angle_radian": 10.667348,
+      "angle_degree": 611.194
+    },
+    {
+      "node": "CDK7",
+      "angle_radian": 11.022926,
+      "angle_degree": 631.56714
+    },
+    {
+      "node": "HMGA2",
+      "angle_radian": 11.378505,
+      "angle_degree": 651.94025
+    },
+    {
+      "node": "DAPK3",
+      "angle_radian": 11.734083,
+      "angle_degree": 672.3134
+    },
+    {
+      "node": "HMGA1",
+      "angle_radian": 12.089662,
+      "angle_degree": 692.6865
+    },
+    {
+      "node": "PRKCD",
+      "angle_radian": 12.445239,
+      "angle_degree": 713.05963
+    },
+    {
+      "node": "UBN1",
+      "angle_radian": 12.800818,
+      "angle_degree": 733.43286
+    },
+    {
+      "node": "CDK5",
+      "angle_radian": 13.156396,
+      "angle_degree": 753.8059
+    },
+    {
+      "node": "CDK2",
+      "angle_radian": 13.511974,
+      "angle_degree": 774.1791
+    },
+    {
+      "node": "DAPK1",
+      "angle_radian": 13.867553,
+      "angle_degree": 794.5522
+    },
+    {
+      "node": "RFWD2",
+      "angle_radian": 14.223131,
+      "angle_degree": 814.92535
+    },
+    {
+      "node": "PPM1J",
+      "angle_radian": 14.57871,
+      "angle_degree": 835.29846
+    },
+    {
+      "node": "BTG2",
+      "angle_radian": 14.934287,
+      "angle_degree": 855.6716
+    },
+    {
+      "node": "CD82",
+      "angle_radian": 15.2898655,
+      "angle_degree": 876.04474
+    },
+    {
+      "node": "HIPK2",
+      "angle_radian": 15.645443,
+      "angle_degree": 896.4178
+    },
+    {
+      "node": "DDB2",
+      "angle_radian": 16.001022,
+      "angle_degree": 916.791
+    },
+    {
+      "node": "CTSD",
+      "angle_radian": 16.3566,
+      "angle_degree": 937.16406
+    },
+    {
+      "node": "NGFR",
+      "angle_radian": 16.71218,
+      "angle_degree": 957.5373
+    },
+    {
+      "node": "CARM1",
+      "angle_radian": 17.067757,
+      "angle_degree": 977.91034
+    },
+    {
+      "node": "TYRP1",
+      "angle_radian": 17.423336,
+      "angle_degree": 998.28357
+    },
+    {
+      "node": "PRKDC",
+      "angle_radian": 17.778913,
+      "angle_degree": 1018.6567
+    },
+    {
+      "node": "HIC1",
+      "angle_radian": 18.134491,
+      "angle_degree": 1039.0298
+    },
+    {
+      "node": "TAP1",
+      "angle_radian": 18.49007,
+      "angle_degree": 1059.403
+    },
+    {
+      "node": "PYCARD",
+      "angle_radian": 18.845648,
+      "angle_degree": 1079.776
+    },
+    {
+      "node": "APC",
+      "angle_radian": 19.201227,
+      "angle_degree": 1100.1492
+    },
+    {
+      "node": "RNF144B",
+      "angle_radian": 19.556805,
+      "angle_degree": 1120.5223
+    },
+    {
+      "node": "KAT2B",
+      "angle_radian": 19.912384,
+      "angle_degree": 1140.8955
+    },
+    {
+      "node": "MSH2",
+      "angle_radian": 20.267962,
+      "angle_degree": 1161.2686
+    },
+    {
+      "node": "PPP1R13L",
+      "angle_radian": 20.623539,
+      "angle_degree": 1181.6417
+    },
+    {
+      "node": "CASP10",
+      "angle_radian": 20.979118,
+      "angle_degree": 1202.0149
+    },
+    {
+      "node": "SP1",
+      "angle_radian": 21.334696,
+      "angle_degree": 1222.388
+    },
+    {
+      "node": "IRF5",
+      "angle_radian": 21.690275,
+      "angle_degree": 1242.7611
+    },
+    {
+      "node": "CABIN1",
+      "angle_radian": 22.045853,
+      "angle_degree": 1263.1343
+    },
+    {
+      "node": "SETD7",
+      "angle_radian": 22.40143,
+      "angle_degree": 1283.5073
+    },
+    {
+      "node": "SETD8",
+      "angle_radian": 22.75701,
+      "angle_degree": 1303.8805
+    },
+    {
+      "node": "APAF1",
+      "angle_radian": 23.112587,
+      "angle_degree": 1324.2537
+    },
+    {
+      "node": "GDF15",
+      "angle_radian": 23.468166,
+      "angle_degree": 1344.6268
+    }
+  ],
+  "node_coordinates": [
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 0,
+      "x": 0.0,
+      "y": 0.0,
+      "node": "TP53"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 170.0,
+      "y": 0.0,
+      "node": "TP63"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 152.91304,
+      "y": 74.28057,
+      "node": "TP73"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 105.08702,
+      "y": 133.62903,
+      "node": "GADD45A"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 36.136078,
+      "y": 166.11496,
+      "node": "PML"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -40.079044,
+      "y": 165.20796,
+      "node": "PRKAB1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -108.23732,
+      "y": 131.09036,
+      "node": "EP300"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -154.63745,
+      "y": 70.620514,
+      "node": "HTT"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -169.95186,
+      "y": -4.045615,
+      "node": "SIRT1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -151.102,
+      "y": -77.89856,
+      "node": "CHEK2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -101.87715,
+      "y": -136.09204,
+      "node": "ATR"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -32.172726,
+      "y": -166.92789,
+      "node": "ATM"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 43.999233,
+      "y": -164.20738,
+      "node": "SUMO1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 111.326385,
+      "y": -128.47737,
+      "node": "PPP2CA"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 156.27429,
+      "y": -66.920456,
+      "node": "PPP2CB"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 169.80745,
+      "y": 8.088939,
+      "node": "PRKAA1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 149.20541,
+      "y": 81.47234,
+      "node": "PRKAA2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 98.60958,
+      "y": 138.47798,
+      "node": "MAPK11"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 28.191149,
+      "y": 167.64624,
+      "node": "MAPK12"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -47.894653,
+      "y": 163.11377,
+      "node": "MAPK13"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -114.35224,
+      "y": 125.791756,
+      "node": "MAPK14"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -157.82254,
+      "y": 63.182644,
+      "node": "PRKAB2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -169.56686,
+      "y": -12.127641,
+      "node": "IGBP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -147.22432,
+      "y": -84.99999,
+      "node": "HMGB1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -95.2863,
+      "y": -140.78537,
+      "node": "WRN"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -24.193363,
+      "y": -168.26967,
+      "node": "PRKAG1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 51.76271,
+      "y": -161.92783,
+      "node": "MDM2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 117.31356,
+      "y": -123.03466,
+      "node": "CREBBP"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 159.28146,
+      "y": -59.40889,
+      "node": "CCNB1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 169.23022,
+      "y": 16.159554,
+      "node": "FBXO11"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 145.1598,
+      "y": 88.47956,
+      "node": "NEDD8"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 91.9089,
+      "y": 143.01312,
+      "node": "CDKN1A"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": 20.182194,
+      "y": 168.79774,
+      "node": "PLK3"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 170,
+      "x": -55.601757,
+      "y": 160.65007,
+      "node": "BAX"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 420.0,
+      "y": 0.0,
+      "node": "HIRA"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 393.72705,
+      "y": 146.21565,
+      "node": "SERPINE1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 318.19516,
+      "y": 274.1384,
+      "node": "FAS"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 202.85408,
+      "y": 367.7638,
+      "node": "H1F0"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 62.134052,
+      "y": 415.37857,
+      "node": "COL18A1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -86.35953,
+      "y": 411.02557,
+      "node": "FDXR"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -224.04868,
+      "y": 355.24948,
+      "node": "SMYD2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -333.7073,
+      "y": 255.02829,
+      "node": "HGF"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -401.616,
+      "y": 122.90074,
+      "node": "GPX1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -419.27878,
+      "y": -24.60293,
+      "node": "TRIAP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -384.48587,
+      "y": -169.02844,
+      "node": "HIST1H1E"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -301.5903,
+      "y": -292.3069,
+      "node": "HIST1H1D"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -180.96281,
+      "y": -379.0151,
+      "node": "HIST1H1C"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -37.695194,
+      "y": -418.305,
+      "node": "HIST1H1B"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 110.288445,
+      "y": -405.261,
+      "node": "HIST1H1A"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 244.4738,
+      "y": -341.51508,
+      "node": "ASF1A"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 348.07336,
+      "y": -235.04239,
+      "node": "KAT8"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 408.12567,
+      "y": -99.16367,
+      "node": "DYRK1A"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 417.11758,
+      "y": 49.121365,
+      "node": "CASP6"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 373.92426,
+      "y": 191.26067,
+      "node": "MAX"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 283.94943,
+      "y": 309.47165,
+      "node": "FOS"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 158.45006,
+      "y": 388.96475,
+      "node": "TP53I3"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 13.127127,
+      "y": 419.7948,
+      "node": "PRMT1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -133.83832,
+      "y": 398.10464,
+      "node": "PCBP4"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -264.05933,
+      "y": 326.60782,
+      "node": "PRMT5"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -361.24402,
+      "y": 214.24928,
+      "node": "E4F1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -413.23367,
+      "y": 75.086136,
+      "node": "CASP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -413.5239,
+      "y": -73.471,
+      "node": "PRKCA"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -362.07837,
+      "y": -212.83623,
+      "node": "CDK1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -265.3337,
+      "y": -325.57336,
+      "node": "CDK9"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -135.39313,
+      "y": -397.57855,
+      "node": "RB1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 11.486425,
+      "y": -419.84293,
+      "node": "CDK7"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 156.92892,
+      "y": -389.58093,
+      "node": "HMGA2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 282.73813,
+      "y": -310.57874,
+      "node": "DAPK3"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 373.17413,
+      "y": -192.72018,
+      "node": "HMGA1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 416.9225,
+      "y": -50.750927,
+      "node": "PRKCD"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 408.50998,
+      "y": 97.568504,
+      "node": "UBN1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 348.98917,
+      "y": 233.68047,
+      "node": "CDK5"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 245.80646,
+      "y": 340.55716,
+      "node": "CDK2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 111.87102,
+      "y": 404.82697,
+      "node": "DAPK1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -36.060528,
+      "y": 418.4491,
+      "node": "RFWD2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -179.48058,
+      "y": 379.71927,
+      "node": "PPM1J"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -300.44562,
+      "y": 293.48328,
+      "node": "BTG2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -383.82245,
+      "y": 170.52959,
+      "node": "CD82"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -419.1794,
+      "y": 26.241425,
+      "node": "HIPK2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -402.09314,
+      "y": -121.330536,
+      "node": "DDB2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -334.70145,
+      "y": -253.72217,
+      "node": "CTSD"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -225.43498,
+      "y": -354.37137,
+      "node": "NGFR"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -87.965096,
+      "y": -410.68497,
+      "node": "CARM1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 60.510784,
+      "y": -415.61816,
+      "node": "TYRP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 201.41545,
+      "y": -368.55368,
+      "node": "PRKDC"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 317.12128,
+      "y": -275.3799,
+      "node": "HIC1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 393.1527,
+      "y": -147.75296,
+      "node": "TAP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 419.9968,
+      "y": -1.6414019,
+      "node": "PYCARD"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 394.2953,
+      "y": 144.67625,
+      "node": "APC"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 319.264,
+      "y": 272.89285,
+      "node": "RNF144B"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 204.28926,
+      "y": 366.96854,
+      "node": "KAT2B"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": 63.75667,
+      "y": 415.13263,
+      "node": "MSH2"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -84.75243,
+      "y": 411.35995,
+      "node": "PPP1R13L"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -222.65894,
+      "y": 356.12213,
+      "node": "CASP10"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -332.7081,
+      "y": 256.3305,
+      "node": "SP1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -401.13275,
+      "y": 124.46888,
+      "node": "IRF5"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -419.37173,
+      "y": -22.964258,
+      "node": "CABIN1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -385.14362,
+      "y": -167.52435,
+      "node": "SETD7"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -302.73007,
+      "y": -291.12628,
+      "node": "SETD8"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -182.44266,
+      "y": -378.305,
+      "node": "APAF1"
+    },
+    {
+      "cx": 0.0,
+      "cy": 0.0,
+      "radius": 420,
+      "x": -39.329285,
+      "y": -418.1545,
+      "node": "GDF15"
+    }
+  ],
+  "ring_indexes": {
+    "total_rings": 4,
+    "values": [
+      {
+        "index": 0,
+        "nodes": [
+          "TP53"
+        ]
+      },
+      {
+        "index": 3,
+        "nodes": [
+          "TP63",
+          "TP73",
+          "GADD45A",
+          "PML",
+          "PRKAB1",
+          "EP300",
+          "HTT",
+          "SIRT1",
+          "CHEK2",
+          "ATR",
+          "ATM",
+          "SUMO1",
+          "PPP2CA",
+          "PPP2CB",
+          "PRKAA1",
+          "PRKAA2",
+          "MAPK11",
+          "MAPK12",
+          "MAPK13",
+          "MAPK14",
+          "PRKAB2",
+          "IGBP1",
+          "HMGB1",
+          "WRN",
+          "PRKAG1",
+          "MDM2",
+          "CREBBP",
+          "CCNB1",
+          "FBXO11",
+          "NEDD8",
+          "CDKN1A",
+          "PLK3",
+          "BAX"
+        ]
+      },
+      {
+        "index": 4,
+        "nodes": [
+          "HIRA",
+          "SERPINE1",
+          "FAS",
+          "H1F0",
+          "COL18A1",
+          "FDXR",
+          "SMYD2",
+          "HGF",
+          "GPX1",
+          "TRIAP1",
+          "HIST1H1E",
+          "HIST1H1D",
+          "HIST1H1C",
+          "HIST1H1B",
+          "HIST1H1A",
+          "ASF1A",
+          "KAT8",
+          "DYRK1A",
+          "CASP6",
+          "MAX",
+          "FOS",
+          "TP53I3",
+          "PRMT1",
+          "PCBP4",
+          "PRMT5",
+          "E4F1",
+          "CASP1",
+          "PRKCA",
+          "CDK1",
+          "CDK9",
+          "RB1",
+          "CDK7",
+          "HMGA2",
+          "DAPK3",
+          "HMGA1",
+          "PRKCD",
+          "UBN1",
+          "CDK5",
+          "CDK2",
+          "DAPK1",
+          "RFWD2",
+          "PPM1J",
+          "BTG2",
+          "CD82",
+          "HIPK2",
+          "DDB2",
+          "CTSD",
+          "NGFR",
+          "CARM1",
+          "TYRP1",
+          "PRKDC",
+          "HIC1",
+          "TAP1",
+          "PYCARD",
+          "APC",
+          "RNF144B",
+          "KAT2B",
+          "MSH2",
+          "PPP1R13L",
+          "CASP10",
+          "SP1",
+          "IRF5",
+          "CABIN1",
+          "SETD7",
+          "SETD8",
+          "APAF1",
+          "GDF15"
+        ]
+      }
+    ]
+  },
+  "rings_radius": [
+    {
+      "ring": 0,
+      "radius": 0
+    },
+    {
+      "ring": 3,
+      "radius": 170
+    },
+    {
+      "ring": 4,
+      "radius": 420
+    }
+  ],
+  "default_cx": 0.0,
+  "default_cy": 0.0,
+  "total_rings": 4,
+  "min_radius": 20,
+  "step_radius": 50,
+  "step_angle": 15.0
+}
