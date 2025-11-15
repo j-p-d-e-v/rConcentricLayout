@@ -21,17 +21,19 @@ impl Radius {
     ) -> anyhow::Result<Vec<Self>> {
         let mut values: Vec<Self> = Vec::new();
         let mut r_step = 0;
+        let mut counter: u32 = 1;
         for r in &ring_indexes.values {
             let r_min = if !values.is_empty() {
                 min_radius.unwrap_or(40)
             } else {
                 0
             };
-            let radius = r_min + r.index * r_step;
+            let radius = r_min + counter * r_step;
             values.push(Radius {
                 ring: r.index,
                 radius,
             });
+            counter += 1;
             r_step += step_radius.unwrap_or(20);
         }
         Ok(values)

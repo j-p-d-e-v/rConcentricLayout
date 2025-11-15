@@ -29,7 +29,6 @@ pub struct Concentric {
     pub total_rings: Option<u32>,
     pub min_radius: Option<u32>,
     pub step_radius: Option<u32>,
-    pub step_angle: Option<f32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -94,7 +93,7 @@ impl Concentric {
 
     /// 5. Nodes Angle
     pub fn calculate_nodes_angle(&mut self) -> anyhow::Result<()> {
-        self.node_angles = NodeAngle::get(&self.ring_indexes, self.step_angle)?;
+        self.node_angles = NodeAngle::get(&self.ring_indexes)?;
         Ok(())
     }
 

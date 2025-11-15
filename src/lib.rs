@@ -30,40 +30,50 @@ pub mod test_concetric_layout {
             nodes: Vec<Node>,
             edges: Vec<Edge>,
         }
-        let sample_data_1_reader = std::fs::File::options()
-            .read(true)
-            .open("storage/sample-data/sample-data-cytoscape.json")
-            .unwrap();
-        let sample_data_1 = serde_json::from_reader::<_, SampleData>(sample_data_1_reader).unwrap();
+        let samples = [
+            "concentric_nonmesh_star_100.json",                       //0
+            "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
+            "sample-data-100-nodes-full-mesh-15-rings.json",          //2
+            "sample-data-100-nodes-full-mesh.json",                   //3
+            "sample-data-cytoscape.json",                             //4
+            "sample-data.json",                                       //5
+        ];
+        for (sample_index, sample_file) in samples.iter().enumerate() {
+            let sample_data_reader = std::fs::File::options()
+                .read(true)
+                .open(format!("storage/sample-data/{}", sample_file))
+                .unwrap();
+            let sample_data_1 =
+                serde_json::from_reader::<_, SampleData>(sample_data_reader).unwrap();
 
-        let mut layout = Concentric::new(Concentric {
-            nodes: sample_data_1.nodes,
-            edges: sample_data_1.edges,
-            step_angle: Some(15.0),
-            step_radius: Some(50),
-            min_radius: Some(20),
-            default_cx: Some(0.0),
-            default_cy: Some(0.0),
-            total_rings: Some(4),
-            ..Default::default()
-        });
-        let result = layout.get();
-        println!("Timer: {:#?}", layout.timer);
-        assert!(result.is_ok(), "{:#?}", result.err());
+            let mut layout = Concentric::new(Concentric {
+                nodes: sample_data_1.nodes,
+                edges: sample_data_1.edges,
+                step_radius: Some(20),
+                min_radius: Some(20),
+                default_cx: Some(0.0),
+                default_cy: Some(0.0),
+                total_rings: Some(15),
+                ..Default::default()
+            });
+            let result = layout.get();
+            println!("Timer: {:#?}", layout.timer);
+            assert!(result.is_ok(), "{:#?}", result.err());
 
-        let writer = std::fs::File::options()
-            .truncate(true)
-            .create(true)
-            .write(true)
-            .open(r"storage/concentric-calculation.json")
-            .unwrap();
-        serde_json::to_writer_pretty(writer, &layout).unwrap();
-        let writer = std::fs::File::options()
-            .truncate(true)
-            .create(true)
-            .write(true)
-            .open(r"storage/concentric.json")
-            .unwrap();
-        serde_json::to_writer_pretty(writer, &result.unwrap()).unwrap();
+            let writer = std::fs::File::options()
+                .truncate(true)
+                .create(true)
+                .write(true)
+                .open(format!("storage/calculation-{}", sample_file))
+                .unwrap();
+            serde_json::to_writer_pretty(writer, &layout).unwrap();
+            let writer = std::fs::File::options()
+                .truncate(true)
+                .create(true)
+                .write(true)
+                .open(format!("storage/output-{}", sample_file))
+                .unwrap();
+            serde_json::to_writer_pretty(writer, &result.unwrap()).unwrap();
+        }
     }
 }

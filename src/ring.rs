@@ -52,14 +52,21 @@ impl RingIndexes {
                 .and_modify(|item| item.push(n.node_id.clone()))
                 .or_insert(vec![n.node_id.clone()]);
         }
+        let mut index: u32 = 0;
         let mut values = values
             .iter()
-            .map(|(index, nodes)| RingIndexValue {
-                index: index.to_owned(),
-                nodes: nodes.to_owned(),
+            .map(|(_, nodes)| {
+                let item = RingIndexValue {
+                    index: index,
+                    nodes: nodes.to_owned(),
+                };
+                index += 1;
+                item
             })
             .collect::<Vec<RingIndexValue>>();
         values.sort_by(|a, b| a.index.cmp(&b.index));
+
+        // If the highest degrees has multiple nodes. Elect one node as the center then push the others to the next ring.
         if let Some(item) = &values.first()
             && item.nodes.len() > 1
         {
@@ -80,7 +87,38 @@ impl RingIndexes {
                 nodes: vec![chosen_node],
             });
         }
+
         values.sort_by(|a, b| a.index.cmp(&b.index));
+        let total_actual_rings = values.len();
+        let max_nodes_per_ring = 36;
+        if total_actual_rings > 1 {
+            let mut index: usize = 1;
+            loop {
+                let (ring_index, nodes) = if let Some(item) = values.get(index) {
+                    (item.index, item.nodes.to_owned())
+                } else {
+                    break;
+                };
+                let total_nodes = nodes.len();
+                if total_nodes < max_nodes_per_ring {
+                    index += 1;
+                    continue;
+                }
+                values[index].nodes = nodes[0..max_nodes_per_ring].to_vec();
+                let mut spill_nodes = nodes[max_nodes_per_ring..].to_vec();
+                let next_index = index + 1;
+                if let Some(next_item) = values.get_mut(next_index) {
+                    next_item.nodes.append(&mut spill_nodes);
+                } else {
+                    let next_ring_index = ring_index + 1;
+                    values.push(RingIndexValue {
+                        index: next_ring_index,
+                        nodes: spill_nodes,
+                    });
+                }
+                index += 1;
+            }
+        }
         Ok(Self {
             total_rings,
             values,
