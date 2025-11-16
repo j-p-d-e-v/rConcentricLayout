@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use rayon::iter::IntoParallelRefIterator;
+use rayon::iter::ParallelIterator;
 use serde::{Deserialize, Serialize};
 
 use crate::{Edge, Node};
@@ -25,7 +27,7 @@ impl NodeConnections {
         let mut totals: HashSet<u32> = HashSet::new();
         for n in nodes {
             let total = edges
-                .iter()
+                .par_iter()
                 .filter(|item| item.source == n.id || item.target == n.id)
                 .count() as u32;
             totals.insert(total);

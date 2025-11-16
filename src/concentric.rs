@@ -42,7 +42,7 @@ impl Concentric {
         let timer = Instant::now();
         self.count_node_connections()?;
         self.normalize_node_connections()?;
-        self.calculate_rings_index()?;
+        self.calculate_rings()?;
         self.calculate_nodes_angle()?;
         self.calculate_nodes_coordinate()?;
         let elapsed = timer.elapsed();
@@ -74,7 +74,7 @@ impl Concentric {
     }
 
     /// 3. Ring Indexs
-    pub fn calculate_rings_index(&mut self) -> anyhow::Result<()> {
+    pub fn calculate_rings(&mut self) -> anyhow::Result<()> {
         self.rings = Ring::get(&self.normalized_values)?;
         Ok(())
     }

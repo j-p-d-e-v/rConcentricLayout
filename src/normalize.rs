@@ -1,3 +1,4 @@
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 
 use crate::NodeConnections;
@@ -22,27 +23,32 @@ impl NormalizeNodeConnections {
     /// Formula: normalized_value = (degree - min_degree) / (max_degree - min_degree)
     /// degree - is the number of edges per nodes. Refer to the connections per node count
     pub fn get(node_connections: &NodeConnections) -> anyhow::Result<Self> {
-        let mut values: Vec<NormalizedValue> = Vec::new();
         let max_degree = node_connections.max_degree;
         let min_degree = node_connections.min_degree;
-        let mut max_value = 0.0;
 
-        for item in &node_connections.values {
-            let normalized_value =
-                (item.total - min_degree) as f32 / (max_degree - min_degree) as f32;
-            max_value = if normalized_value > max_value {
-                normalized_value
-            } else {
-                max_value
-            };
-            values.push(NormalizedValue {
-                node_id: item.node_id.clone(),
-                degree: item.total,
-                max_degree: max_degree,
-                min_degree: min_degree,
-                normalized_value,
-            });
-        }
+        let values: Vec<NormalizedValue> = node_connections
+            .values
+            .par_iter()
+            .map(|item| {
+                let item = item.to_owned();
+                let normalized_value =
+                    (item.total - min_degree) as f32 / (max_degree - min_degree) as f32;
+                NormalizedValue {
+                    node_id: item.node_id.clone(),
+                    degree: item.total,
+                    max_degree: max_degree,
+                    min_degree: min_degree,
+                    normalized_value,
+                }
+            })
+            .collect::<Vec<NormalizedValue>>();
+
+        let max_value = values
+            .par_iter()
+            .map(|item| item.normalized_value.to_owned())
+            .max_by(|a, b| a.partial_cmp(&b).unwrap_or(std::cmp::Ordering::Less))
+            .unwrap_or(0.0);
+
         Ok(Self { max_value, values })
     }
 }

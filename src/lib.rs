@@ -17,6 +17,7 @@ pub use ring::Ring;
 
 #[cfg(test)]
 pub mod test_concetric_layout {
+    use rayon::ThreadPoolBuilder;
     use serde::{Deserialize, Serialize};
 
     use super::*;
@@ -35,7 +36,15 @@ pub mod test_concetric_layout {
             "sample-data-100-nodes-full-mesh.json",                   //3
             "sample-data-cytoscape.json",                             //4
             "sample-data.json",                                       //5
+            "sample_graph_1000.json",                                 //6
+            "sample_tree_1000.json",                                  //7
+            "sample_scalefree_1000.json",                             //8
         ];
+
+        ThreadPoolBuilder::new()
+            .num_threads(24)
+            .build_global()
+            .unwrap();
         for (_sample_index, sample_file) in samples.iter().enumerate() {
             let sample_data_reader = std::fs::File::options()
                 .read(true)
