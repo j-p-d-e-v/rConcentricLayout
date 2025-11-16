@@ -13,7 +13,7 @@ pub use node_angle::NodeAngle;
 pub use node_connections::{NodeConnectionValue, NodeConnections};
 pub use node_coordinate::NodeCoordinate;
 pub use normalize::{NormalizeNodeConnections, NormalizedValue};
-pub use ring::{RingIndexValue, RingIndexes};
+pub use ring::Ring;
 
 #[cfg(test)]
 pub mod test_concetric_layout {

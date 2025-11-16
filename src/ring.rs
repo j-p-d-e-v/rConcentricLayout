@@ -4,25 +4,14 @@ use std::f32::consts::PI;
 use crate::NormalizeNodeConnections;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RingIndexes {
-    pub values: Vec<RingIndexValue>,
-}
-
-impl Default for RingIndexes {
-    fn default() -> Self {
-        Self { values: Vec::new() }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RingIndexValue {
-    pub index: u32,
+pub struct Ring {
+    pub index: u32, //Sequential Index
     pub original_index: u32,
     pub nodes: Vec<String>,
     pub radius: u32,
 }
 
-impl RingIndexes {
+impl Ring {
     pub fn get_radius(radius: u32, ring_index: u32) -> u32 {
         let new_radius = radius * ring_index;
         new_radius
@@ -33,31 +22,30 @@ impl RingIndexes {
         result
     }
 
-    /// Distribute each nodes to its respective rings
-    /// Formula: ring_index = floor((HNV - NV) x R)
-    /// R - total rings. Default: 4
-    /// HNV - Highest normalized value
-    /// NV - Node normalized value
-    pub fn get(data: &NormalizeNodeConnections) -> anyhow::Result<Self> {
+    pub fn get(data: &NormalizeNodeConnections) -> anyhow::Result<Vec<Self>> {
         let highest_normalized_value = data.max_value;
-        let last_ring_index = 2;
-        let mut values: Vec<RingIndexValue> = Vec::new();
+        let mut values: Vec<Ring> = Vec::new();
         let mut index = 0;
+        let step_radius: u32 = 20;
+        let mut min_radius = 30;
+        // Assign Ring Index based on the normalized value.
         for n in data.values.iter() {
-            let mut ring_index =
+            let ring_index =
                 ((highest_normalized_value - n.normalized_value) * 2_f32).floor() as u32;
-            if ring_index > last_ring_index {
-                ring_index = last_ring_index;
-            }
             if let Some(item) = values
                 .iter_mut()
                 .find(|item| item.original_index == ring_index)
             {
                 item.nodes.push(n.node_id.to_owned());
             } else {
-                values.push(RingIndexValue {
+                let radius = if index == 0 {
+                    0
+                } else {
+                    Self::get_radius(min_radius, ring_index)
+                };
+                values.push(Ring {
                     index,
-                    radius: 0,
+                    radius,
                     original_index: ring_index,
                     nodes: vec![n.node_id.to_owned()],
                 });
@@ -65,42 +53,44 @@ impl RingIndexes {
             }
         }
         let mut index: usize = 0;
-        let step_radius: u32 = 10;
-        let mut min_radius = 30;
+        // Calculate Max Nodes per ring then if total nodes of the ring exceeds to the calculated max nodes, it will be moved to the next ring.
+        // If the next ring exists, it will append to the existing next ring nodes but take note the appended node will be added at the top.
+        // If the next ring does exists, it will create a new one.
         loop {
             let item = if let Some(item) = values.get(index) {
                 item.to_owned()
             } else {
                 break;
             };
-            let ring_index = item.index;
             let nodes: Vec<String> = item.nodes;
-            let radius: u32 = if index == 0 {
-                0
-            } else {
-                Self::get_radius(min_radius, ring_index)
-            };
             let max_nodes_per_ring = if index == 0 {
                 1
             } else {
-                Self::get_max_nodes(radius)
+                Self::get_max_nodes(item.radius)
             };
-            let total_nodes = nodes.len();
-            values[index].radius = radius;
-            if total_nodes < max_nodes_per_ring {
+            if nodes.len() < max_nodes_per_ring {
                 index += 1;
                 continue;
             }
+            if let Some(current_item) = values.get_mut(index)
+                && let Some(left_nodes) = nodes.get(0..max_nodes_per_ring)
+            {
+                current_item.nodes = left_nodes.to_owned();
+            }
             min_radius += step_radius;
-            values[index].nodes = nodes[0..max_nodes_per_ring].to_vec();
             index += 1;
-            let spill_nodes = nodes[max_nodes_per_ring..].to_vec();
+            let spill_nodes = if let Some(spill_nodes) = nodes.get(max_nodes_per_ring..) {
+                spill_nodes.to_owned()
+            } else {
+                continue;
+            };
             if let Some(next_item) = values.get_mut(index) {
                 let mut nodes = spill_nodes;
                 nodes.append(&mut next_item.nodes);
                 next_item.nodes = nodes;
+                next_item.radius = Self::get_radius(min_radius, index as u32);
             } else {
-                values.push(RingIndexValue {
+                values.push(Ring {
                     index: index as u32,
                     nodes: spill_nodes,
                     radius: Self::get_radius(min_radius, index as u32),
@@ -108,6 +98,6 @@ impl RingIndexes {
                 });
             }
         }
-        Ok(Self { values })
+        Ok(values)
     }
 }

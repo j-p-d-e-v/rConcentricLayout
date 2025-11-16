@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use serde::{Deserialize, Serialize};
 
-use crate::RingIndexes;
+use crate::Ring;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NodeAngle {
@@ -16,9 +16,9 @@ impl NodeAngle {
     /// Compute the angle for each nodes in a ring. This will contain both angle in radian and egree value
     /// Step Angle - The incrementor of the angle. Formula: 360 / total nodes
     /// Radian - The position in radian. Formula: Ange * (PI / 180)
-    pub fn get(ring_indexes: &RingIndexes) -> anyhow::Result<Vec<NodeAngle>> {
+    pub fn get(rings: &Vec<Ring>) -> anyhow::Result<Vec<NodeAngle>> {
         let mut values: Vec<NodeAngle> = Vec::new();
-        for r in &ring_indexes.values {
+        for r in rings {
             let nodes = &r.nodes;
             let total_nodes = nodes.len();
             let mut start_angle = 0_f32;

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{NodeAngle, RingIndexes};
+use crate::{NodeAngle, Ring};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeCoordinate {
@@ -19,7 +19,7 @@ impl NodeCoordinate {
     /// y = cy + r * sin(<theta/radian>)
     pub fn get(
         nodes_angle: &Vec<NodeAngle>,
-        ring_indexes: &RingIndexes,
+        rings: &Vec<Ring>,
         //        rings_radius: &Vec<Radius>,
         default_cx: Option<f32>,
         default_cy: Option<f32>,
@@ -28,8 +28,7 @@ impl NodeCoordinate {
         let cy = default_cy.unwrap_or(0.0);
         let mut values: Vec<NodeCoordinate> = Vec::new();
         for n in nodes_angle {
-            let ring = ring_indexes
-                .values
+            let ring = rings
                 .iter()
                 .find(|item| item.nodes.contains(&n.node))
                 .unwrap();

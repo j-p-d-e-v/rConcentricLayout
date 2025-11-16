@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use crate::{
-    Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, RingIndexes,
+    Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Ring,
 };
 use serde::{Deserialize, Serialize};
 
@@ -21,7 +21,7 @@ pub struct Concentric {
     pub normalized_values: NormalizeNodeConnections,
     pub node_angles: Vec<NodeAngle>,
     pub node_coordinates: Vec<NodeCoordinate>,
-    pub ring_indexes: RingIndexes,
+    pub rings: Vec<Ring>,
     pub default_cx: Option<f32>,
     pub default_cy: Option<f32>,
 }
@@ -75,13 +75,13 @@ impl Concentric {
 
     /// 3. Ring Indexs
     pub fn calculate_rings_index(&mut self) -> anyhow::Result<()> {
-        self.ring_indexes = RingIndexes::get(&self.normalized_values)?;
+        self.rings = Ring::get(&self.normalized_values)?;
         Ok(())
     }
 
     /// 4. Nodes Angle
     pub fn calculate_nodes_angle(&mut self) -> anyhow::Result<()> {
-        self.node_angles = NodeAngle::get(&self.ring_indexes)?;
+        self.node_angles = NodeAngle::get(&self.rings)?;
         Ok(())
     }
 
@@ -89,8 +89,7 @@ impl Concentric {
     pub fn calculate_nodes_coordinate(&mut self) -> anyhow::Result<()> {
         self.node_coordinates = NodeCoordinate::get(
             &self.node_angles,
-            &self.ring_indexes,
-            //           &self.rings_radius,
+            &self.rings,
             self.default_cx,
             self.default_cy,
         )?;
