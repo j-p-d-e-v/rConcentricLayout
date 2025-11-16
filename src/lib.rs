@@ -5,7 +5,6 @@ pub mod node_angle;
 pub mod node_connections;
 pub mod node_coordinate;
 pub mod normalize;
-pub mod radius;
 pub mod ring;
 pub use concentric::Concentric;
 pub use edge::Edge;
@@ -14,7 +13,6 @@ pub use node_angle::NodeAngle;
 pub use node_connections::{NodeConnectionValue, NodeConnections};
 pub use node_coordinate::NodeCoordinate;
 pub use normalize::{NormalizeNodeConnections, NormalizedValue};
-pub use radius::Radius;
 pub use ring::{RingIndexValue, RingIndexes};
 
 #[cfg(test)]
@@ -38,7 +36,7 @@ pub mod test_concetric_layout {
             "sample-data-cytoscape.json",                             //4
             "sample-data.json",                                       //5
         ];
-        for (sample_index, sample_file) in samples.iter().enumerate() {
+        for (_sample_index, sample_file) in samples.iter().enumerate() {
             let sample_data_reader = std::fs::File::options()
                 .read(true)
                 .open(format!("storage/sample-data/{}", sample_file))
@@ -49,11 +47,8 @@ pub mod test_concetric_layout {
             let mut layout = Concentric::new(Concentric {
                 nodes: sample_data_1.nodes,
                 edges: sample_data_1.edges,
-                step_radius: Some(20),
-                min_radius: Some(20),
                 default_cx: Some(0.0),
                 default_cy: Some(0.0),
-                total_rings: Some(15),
                 ..Default::default()
             });
             let result = layout.get();

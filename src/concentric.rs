@@ -1,8 +1,7 @@
 use std::time::Instant;
 
 use crate::{
-    Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Radius,
-    RingIndexes,
+    Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, RingIndexes,
 };
 use serde::{Deserialize, Serialize};
 
@@ -23,12 +22,8 @@ pub struct Concentric {
     pub node_angles: Vec<NodeAngle>,
     pub node_coordinates: Vec<NodeCoordinate>,
     pub ring_indexes: RingIndexes,
-    pub rings_radius: Vec<Radius>,
     pub default_cx: Option<f32>,
     pub default_cy: Option<f32>,
-    pub total_rings: Option<u32>,
-    pub min_radius: Option<u32>,
-    pub step_radius: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,7 +43,6 @@ impl Concentric {
         self.count_node_connections()?;
         self.normalize_node_connections()?;
         self.calculate_rings_index()?;
-        self.calculate_rings_radius()?;
         self.calculate_nodes_angle()?;
         self.calculate_nodes_coordinate()?;
         let elapsed = timer.elapsed();
@@ -81,28 +75,22 @@ impl Concentric {
 
     /// 3. Ring Indexs
     pub fn calculate_rings_index(&mut self) -> anyhow::Result<()> {
-        self.ring_indexes = RingIndexes::get(&self.normalized_values, self.total_rings)?;
+        self.ring_indexes = RingIndexes::get(&self.normalized_values)?;
         Ok(())
     }
 
-    /// 4. Rings Radius
-    pub fn calculate_rings_radius(&mut self) -> anyhow::Result<()> {
-        self.rings_radius = Radius::get(&self.ring_indexes, self.min_radius, self.step_radius)?;
-        Ok(())
-    }
-
-    /// 5. Nodes Angle
+    /// 4. Nodes Angle
     pub fn calculate_nodes_angle(&mut self) -> anyhow::Result<()> {
         self.node_angles = NodeAngle::get(&self.ring_indexes)?;
         Ok(())
     }
 
-    /// 6. Nodes Coordinate
+    /// 5. Nodes Coordinate
     pub fn calculate_nodes_coordinate(&mut self) -> anyhow::Result<()> {
         self.node_coordinates = NodeCoordinate::get(
             &self.node_angles,
             &self.ring_indexes,
-            &self.rings_radius,
+            //           &self.rings_radius,
             self.default_cx,
             self.default_cy,
         )?;
