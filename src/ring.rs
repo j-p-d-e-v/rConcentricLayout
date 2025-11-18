@@ -1,3 +1,6 @@
+use rayon::iter::{
+    IndexedParallelIterator, IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator,
+};
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
 
@@ -24,34 +27,60 @@ impl Ring {
 
     pub fn get(data: &NormalizeNodeConnections) -> anyhow::Result<Vec<Self>> {
         let highest_normalized_value = data.max_value;
-        let mut values: Vec<Ring> = Vec::new();
-        let mut index = 0;
         let step_radius: u32 = 20;
         let mut min_radius = 30;
+
         // Assign Ring Index based on the normalized value.
-        for n in data.values.iter() {
-            let ring_index =
-                ((highest_normalized_value - n.normalized_value) * 2_f32).floor() as u32;
-            if let Some(item) = values
-                .iter_mut()
-                .find(|item| item.original_index == ring_index)
-            {
-                item.nodes.push(n.node_id.to_owned());
-            } else {
-                let radius = if index == 0 {
-                    0
-                } else {
-                    Self::get_radius(min_radius, ring_index)
-                };
-                values.push(Ring {
-                    index,
-                    radius,
-                    original_index: ring_index,
-                    nodes: vec![n.node_id.to_owned()],
-                });
-                index += 1;
-            }
-        }
+        let mut values = data
+            .values
+            .par_iter()
+            .fold(
+                || {
+                    let values: Vec<Ring> = Vec::new();
+                    values
+                },
+                |mut values, item| {
+                    let ring_index =
+                        ((highest_normalized_value - item.normalized_value) * 2_f32).floor() as u32;
+                    let radius = Self::get_radius(min_radius, ring_index);
+                    values.push(Ring {
+                        index: 0,
+                        radius,
+                        original_index: ring_index,
+                        nodes: vec![item.node_id.to_owned()],
+                    });
+                    values
+                },
+            )
+            .reduce(
+                || {
+                    let values: Vec<Ring> = Vec::new();
+                    values
+                },
+                |mut values, items| {
+                    for mut item in items {
+                        let ring_index = item.original_index;
+                        if let Some(value) = values
+                            .iter_mut()
+                            .find(|value| value.original_index == ring_index)
+                        {
+                            value.nodes.append(&mut item.nodes);
+                        } else {
+                            values.push(item);
+                        }
+                    }
+                    values
+                },
+            )
+            .par_iter_mut()
+            .enumerate()
+            .map(|(index, item)| {
+                item.index = index as u32;
+                item.radius = if index == 0 { 0 } else { item.radius };
+                item.to_owned()
+            })
+            .collect::<Vec<Ring>>();
+
         let mut index: usize = 0;
         // Calculate Max Nodes per ring then if total nodes of the ring exceeds to the calculated max nodes, it will be moved to the next ring.
         // If the next ring exists, it will append to the existing next ring nodes but take note the appended node will be added at the top.

@@ -1,3 +1,4 @@
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 
 use crate::{NodeAngle, Ring};
@@ -20,31 +21,32 @@ impl NodeCoordinate {
     pub fn get(
         nodes_angle: &Vec<NodeAngle>,
         rings: &Vec<Ring>,
-        //        rings_radius: &Vec<Radius>,
         default_cx: Option<f32>,
         default_cy: Option<f32>,
     ) -> anyhow::Result<Vec<NodeCoordinate>> {
         let cx = default_cx.unwrap_or(0.0);
         let cy = default_cy.unwrap_or(0.0);
-        let mut values: Vec<NodeCoordinate> = Vec::new();
-        for n in nodes_angle {
-            let ring = rings
-                .iter()
-                .find(|item| item.nodes.contains(&n.node))
-                .unwrap();
-            let ring_radius = ring.radius;
+        let values = nodes_angle
+            .par_iter()
+            .map(|n| {
+                let ring = rings
+                    .iter()
+                    .find(|item| item.nodes.contains(&n.node))
+                    .unwrap();
+                let ring_radius = ring.radius;
 
-            let x = cx + ring_radius as f32 * n.angle_radian.cos();
-            let y = cy + ring_radius as f32 * n.angle_radian.sin();
-            values.push(NodeCoordinate {
-                cx: cx.clone(),
-                cy: cy.clone(),
-                x,
-                y,
-                radius: ring_radius,
-                node: n.node.clone(),
-            });
-        }
+                let x = cx + ring_radius as f32 * n.angle_radian.cos();
+                let y = cy + ring_radius as f32 * n.angle_radian.sin();
+                NodeCoordinate {
+                    cx: cx.clone(),
+                    cy: cy.clone(),
+                    x,
+                    y,
+                    radius: ring_radius,
+                    node: n.node.clone(),
+                }
+            })
+            .collect::<Vec<NodeCoordinate>>();
         Ok(values)
     }
 }

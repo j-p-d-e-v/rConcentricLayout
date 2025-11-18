@@ -42,7 +42,7 @@ pub mod test_concetric_layout {
         ];
 
         ThreadPoolBuilder::new()
-            .num_threads(24)
+            .num_threads(48)
             .build_global()
             .unwrap();
         for (_sample_index, sample_file) in samples.iter().enumerate() {
