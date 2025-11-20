@@ -19,6 +19,7 @@ pub use ring::Ring;
 pub mod test_concetric_layout {
     use rayon::ThreadPoolBuilder;
     use serde::{Deserialize, Serialize};
+    use tabular::{Row, Table};
 
     use super::*;
 
@@ -30,21 +31,27 @@ pub mod test_concetric_layout {
             edges: Vec<Edge>,
         }
         let samples = [
-            "concentric_nonmesh_star_100.json",                       //0
-            "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
-            "sample-data-100-nodes-full-mesh-15-rings.json",          //2
-            "sample-data-100-nodes-full-mesh.json",                   //3
-            "sample-data-cytoscape.json",                             //4
-            "sample-data.json",                                       //5
-            "sample_graph_1000.json",                                 //6
-            "sample_tree_1000.json",                                  //7
-            "sample_scalefree_1000.json",                             //8
+            "concentric_nonmesh_star_100.json", //0
+                                                //  "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
+                                                //  "sample-data-100-nodes-full-mesh-15-rings.json",          //2
+                                                //  "sample-data-100-nodes-full-mesh.json",                   //3
+                                                //  "sample-data-cytoscape.json",                             //4
+                                                //  "sample-data.json",                                       //5
+                                                //  "sample_graph_1000.json",                                 //6
+                                                //  "sample_tree_1000.json",                                  //7
+                                                //  "sample_scalefree_1000.json",                             //8
+                                                //  "graph_10000.json",                                       //9,
+                                                //  "graph_20000.json",                                       //10,
+                                                //  "graph_50000.json",                                       //11,
+                                                //  "graph_100000.json",                                      //12
         ];
 
         ThreadPoolBuilder::new()
-            .num_threads(48)
+            .num_threads(24)
             .build_global()
             .unwrap();
+        let mut table = Table::new("| {:<} | {:^} nodes | {:^} edges | {:^}s | {:^}ms | {:^}us |");
+
         for (_sample_index, sample_file) in samples.iter().enumerate() {
             let sample_data_reader = std::fs::File::options()
                 .read(true)
@@ -61,7 +68,17 @@ pub mod test_concetric_layout {
                 ..Default::default()
             });
             let result = layout.get();
-            println!("Timer: {:#?}", layout.timer);
+            let timer = layout.timer.clone();
+
+            table = table.with_row(
+                Row::new()
+                    .with_cell(sample_file)
+                    .with_cell(layout.nodes.len())
+                    .with_cell(layout.edges.len())
+                    .with_cell(timer.clone().seconds.unwrap().to_string())
+                    .with_cell(timer.clone().millis.unwrap().to_string())
+                    .with_cell(timer.clone().micros.unwrap().to_string()),
+            );
             assert!(result.is_ok(), "{:#?}", result.err());
 
             let writer = std::fs::File::options()
@@ -79,5 +96,6 @@ pub mod test_concetric_layout {
                 .unwrap();
             serde_json::to_writer_pretty(writer, &result.unwrap()).unwrap();
         }
+        println!("{}", table.to_string());
     }
 }

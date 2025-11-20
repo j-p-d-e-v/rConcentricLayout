@@ -1,5 +1,9 @@
 use std::f32::consts::PI;
 
+use rayon::{
+    iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
+    slice::ParallelSliceMut,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::Ring;
@@ -17,24 +21,47 @@ impl NodeAngle {
     /// Step Angle - The incrementor of the angle. Formula: 360 / total nodes
     /// Radian - The position in radian. Formula: Ange * (PI / 180)
     pub fn get(rings: &Vec<Ring>) -> anyhow::Result<Vec<NodeAngle>> {
-        let mut values: Vec<NodeAngle> = Vec::new();
-        for r in rings {
-            let nodes = &r.nodes;
-            let total_nodes = nodes.len();
-            let mut start_angle = 0_f32;
-            let step_angle = (360_f32 / total_nodes as f32) as f32;
-
-            for node in nodes.iter() {
-                let angle_radian = start_angle * (PI / 180_f32);
-                values.push(NodeAngle {
-                    node: node.clone(),
-                    angle_radian: angle_radian,
-                    angle_degree: start_angle,
-                    ring: r.index,
-                });
-                start_angle += step_angle;
-            }
-        }
+        //        let mut values: Vec<NodeAngle> = Vec::new();
+        let mut values: Vec<NodeAngle> = rings
+            .par_iter()
+            .fold(
+                || {
+                    let values: Vec<NodeAngle> = Vec::new();
+                    values
+                },
+                |mut values, r| {
+                    let nodes = &r.nodes;
+                    let total_nodes = nodes.len();
+                    let step_angle = (360_f32 / total_nodes as f32) as f32;
+                    let mut result = nodes
+                        .par_iter()
+                        .enumerate()
+                        .map(|(index, node)| {
+                            let angle_degree = index as f32 * step_angle;
+                            let angle_radian = angle_degree * (PI / 180_f32);
+                            NodeAngle {
+                                node: node.clone(),
+                                angle_radian: angle_radian,
+                                angle_degree: angle_degree,
+                                ring: r.index,
+                            }
+                        })
+                        .collect::<Vec<NodeAngle>>();
+                    values.append(&mut result);
+                    values
+                },
+            )
+            .reduce(
+                || {
+                    let values: Vec<NodeAngle> = Vec::new();
+                    values
+                },
+                |mut values, mut items| {
+                    values.append(&mut items);
+                    values
+                },
+            );
+        values.par_sort_by(|a, b| a.ring.cmp(&b.ring));
         Ok(values)
     }
 }

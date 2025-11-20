@@ -1,5 +1,9 @@
-use rayon::iter::{
-    IndexedParallelIterator, IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator,
+use rayon::{
+    iter::{
+        IndexedParallelIterator, IntoParallelRefIterator, IntoParallelRefMutIterator,
+        ParallelIterator,
+    },
+    slice::ParallelSliceMut,
 };
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
@@ -85,48 +89,127 @@ impl Ring {
         // Calculate Max Nodes per ring then if total nodes of the ring exceeds to the calculated max nodes, it will be moved to the next ring.
         // If the next ring exists, it will append to the existing next ring nodes but take note the appended node will be added at the top.
         // If the next ring does exists, it will create a new one.
-        loop {
-            let item = if let Some(item) = values.get(index) {
-                item.to_owned()
-            } else {
-                break;
-            };
-            let nodes: Vec<String> = item.nodes;
-            let max_nodes_per_ring = if index == 0 {
-                1
-            } else {
-                Self::get_max_nodes(item.radius)
-            };
-            if nodes.len() < max_nodes_per_ring {
-                index += 1;
-                continue;
-            }
-            if let Some(current_item) = values.get_mut(index)
-                && let Some(left_nodes) = nodes.get(0..max_nodes_per_ring)
-            {
-                current_item.nodes = left_nodes.to_owned();
-            }
-            min_radius += step_radius;
-            index += 1;
-            let spill_nodes = if let Some(spill_nodes) = nodes.get(max_nodes_per_ring..) {
-                spill_nodes.to_owned()
-            } else {
-                continue;
-            };
-            if let Some(next_item) = values.get_mut(index) {
-                let mut nodes = spill_nodes;
-                nodes.append(&mut next_item.nodes);
-                next_item.nodes = nodes;
-                next_item.radius = Self::get_radius(min_radius, index as u32);
-            } else {
-                values.push(Ring {
-                    index: index as u32,
-                    nodes: spill_nodes,
-                    radius: Self::get_radius(min_radius, index as u32),
-                    original_index: item.original_index,
-                });
-            }
-        }
+        let mut values = values
+            .par_iter()
+            .enumerate()
+            .fold(
+                || {
+                    let values: Vec<Ring> = Vec::new();
+                    values
+                },
+                |mut values, (index, item)| {
+                    let ring_index = item.index;
+                    let item = if let Some(vitem) = values
+                        .par_iter_mut()
+                        .find_any(|vitem| vitem.index == ring_index)
+                    {
+                        let mut item = item.to_owned();
+                        let mut nodes: Vec<String> = Vec::new();
+                        nodes.append(&mut vitem.nodes);
+                        nodes.append(&mut item.nodes);
+                        item.nodes = nodes;
+                        item.radius = Self::get_radius(step_radius, ring_index * 2);
+                        item
+                    } else {
+                        item.to_owned()
+                    };
+                    let nodes: Vec<String> = item.nodes.to_owned();
+                    let max_nodes_per_ring = if ring_index == 0 {
+                        1
+                    } else {
+                        Self::get_max_nodes(item.radius)
+                    };
+                    if nodes.len() < max_nodes_per_ring {
+                        values.push(item.to_owned());
+                    } else {
+                        let non_spilled_nodes = if let Some(none_spilled_nodes) =
+                            item.nodes.get(0..max_nodes_per_ring)
+                        {
+                            none_spilled_nodes.to_owned()
+                        } else {
+                            // Put a warning message here
+                            Vec::new()
+                        };
+                        let spilled_nodes =
+                            if let Some(spilled_nodes) = item.nodes.get(max_nodes_per_ring..) {
+                                spilled_nodes.to_owned()
+                            } else {
+                                // Put a warning message here
+                                Vec::new()
+                            };
+                        if !non_spilled_nodes.is_empty() {
+                            values.push(Ring {
+                                nodes: non_spilled_nodes,
+                                radius: Self::get_radius(step_radius, ring_index * 2),
+                                ..item.clone()
+                            });
+                        }
+                        if !spilled_nodes.is_empty() {
+                            values.push(Ring {
+                                nodes: spilled_nodes,
+                                index: ring_index + 1,
+                                radius: Self::get_radius(step_radius, (ring_index + 1) * 2),
+                                ..item
+                            });
+                        }
+                    }
+                    values
+                },
+            )
+            .reduce(
+                || {
+                    let values: Vec<Ring> = Vec::new();
+                    values
+                },
+                |mut values, mut items| {
+                    values.append(&mut items);
+                    values
+                },
+            );
+        values.par_sort_by(|a, b| a.index.cmp(&b.index));
+        println!("{:#?}", values);
+        //  loop {
+        //      let item = if let Some(item) = values.get(index) {
+        //          item.to_owned()
+        //      } else {
+        //          break;
+        //      };
+        //      let nodes: Vec<String> = item.nodes;
+        //      let max_nodes_per_ring = if index == 0 {
+        //          1
+        //      } else {
+        //          Self::get_max_nodes(item.radius)
+        //      };
+        //      if nodes.len() < max_nodes_per_ring {
+        //          index += 1;
+        //          continue;
+        //      }
+        //      if let Some(current_item) = values.get_mut(index)
+        //          && let Some(left_nodes) = nodes.get(0..max_nodes_per_ring)
+        //      {
+        //          current_item.nodes = left_nodes.to_owned();
+        //      }
+        //      min_radius += step_radius;
+        //      index += 1;
+        //      let spill_nodes = if let Some(spill_nodes) = nodes.get(max_nodes_per_ring..) {
+        //          spill_nodes.to_owned()
+        //      } else {
+        //          continue;
+        //      };
+        //      if let Some(next_item) = values.get_mut(index) {
+        //          let mut nodes = spill_nodes;
+        //          nodes.append(&mut next_item.nodes);
+        //          next_item.nodes = nodes;
+        //          next_item.radius = Self::get_radius(min_radius, index as u32);
+        //      } else {
+        //          values.push(Ring {
+        //              index: index as u32,
+        //              nodes: spill_nodes,
+        //              radius: Self::get_radius(min_radius, index as u32),
+        //              original_index: item.original_index,
+        //          });
+        //      }
+        //  }
         Ok(values)
     }
 }
