@@ -39,8 +39,8 @@ impl NodeConnections {
             .par_iter()
             .map(|item| item.total)
             .collect::<Vec<u32>>();
-        let max_degree = totals.iter().max().unwrap_or(&0).to_owned();
-        let min_degree = totals.iter().min().unwrap_or(&0).to_owned();
+        let max_degree = totals.par_iter().max().unwrap_or(&0).to_owned();
+        let min_degree = totals.par_iter().min().unwrap_or(&0).to_owned();
         Ok(Self {
             max_degree,
             min_degree,
