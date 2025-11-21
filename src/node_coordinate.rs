@@ -20,7 +20,7 @@ impl NodeCoordinate {
     /// y = cy + r * sin(<theta/radian>)
     pub fn get(
         nodes_angle: &Vec<NodeAngle>,
-        rings: &Vec<Ring>,
+        rings: &[Ring],
         default_cx: Option<f32>,
         default_cy: Option<f32>,
     ) -> anyhow::Result<Vec<NodeCoordinate>> {
@@ -38,8 +38,8 @@ impl NodeCoordinate {
                 let x = cx + ring_radius as f32 * n.angle_radian.cos();
                 let y = cy + ring_radius as f32 * n.angle_radian.sin();
                 NodeCoordinate {
-                    cx: cx.clone(),
-                    cy: cy.clone(),
+                    cx,
+                    cy,
                     x,
                     y,
                     radius: ring_radius,

@@ -36,8 +36,8 @@ impl NormalizeNodeConnections {
                 NormalizedValue {
                     node_id: item.node_id.clone(),
                     degree: item.total,
-                    max_degree: max_degree,
-                    min_degree: min_degree,
+                    max_degree,
+                    min_degree,
                     normalized_value,
                 }
             })
@@ -46,7 +46,7 @@ impl NormalizeNodeConnections {
         let max_value = values
             .par_iter()
             .map(|item| item.normalized_value.to_owned())
-            .max_by(|a, b| a.partial_cmp(&b).unwrap_or(std::cmp::Ordering::Less))
+            .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Less))
             .unwrap_or(0.0);
 
         Ok(Self { max_value, values })

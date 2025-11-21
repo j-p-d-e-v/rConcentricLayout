@@ -32,7 +32,7 @@ impl NodeAngle {
                 |mut values, r| {
                     let nodes = &r.nodes;
                     let total_nodes = nodes.len();
-                    let step_angle = (360_f32 / total_nodes as f32) as f32;
+                    let step_angle = 360_f32 / total_nodes as f32;
                     let mut result = nodes
                         .par_iter()
                         .enumerate()
@@ -41,8 +41,8 @@ impl NodeAngle {
                             let angle_radian = angle_degree * (PI / 180_f32);
                             NodeAngle {
                                 node: node.clone(),
-                                angle_radian: angle_radian,
-                                angle_degree: angle_degree,
+                                angle_radian,
+                                angle_degree,
                                 ring: r.index,
                             }
                         })
