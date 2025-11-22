@@ -1,3 +1,4 @@
+use crate::cpu::NormalizeNodeConnections;
 use rayon::{
     iter::{
         IndexedParallelIterator, IntoParallelRefIterator, IntoParallelRefMutIterator,
@@ -7,8 +8,6 @@ use rayon::{
 };
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
-
-use crate::NormalizeNodeConnections;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Ring {

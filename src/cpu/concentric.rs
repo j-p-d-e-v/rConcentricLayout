@@ -1,19 +1,11 @@
+use crate::Timer;
+use crate::cpu::{NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Ring};
+use crate::{Edge, Node};
+use serde::{Deserialize, Serialize};
 use std::time::Instant;
 
-use crate::{
-    Edge, Node, NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Ring,
-};
-use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct Timer {
-    pub micros: Option<u128>,
-    pub millis: Option<u128>,
-    pub seconds: Option<u64>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct Concentric {
+pub struct CpuConcentric {
     pub timer: Timer,
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
@@ -27,18 +19,18 @@ pub struct Concentric {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ConcetricData {
+pub struct CpuConcetricData {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
     pub coordinates: Vec<NodeCoordinate>,
 }
 
-impl Concentric {
-    pub fn new(data: Concentric) -> Self {
+impl CpuConcentric {
+    pub fn new(data: CpuConcentric) -> Self {
         data
     }
 
-    pub fn get(&mut self) -> anyhow::Result<ConcetricData> {
+    pub fn get(&mut self) -> anyhow::Result<CpuConcetricData> {
         let timer = Instant::now();
         self.count_node_connections()?;
         self.normalize_node_connections()?;
@@ -52,7 +44,7 @@ impl Concentric {
             millis: Some(elapsed.as_millis()),
             seconds: Some(elapsed.as_secs()),
         };
-        Ok(ConcetricData {
+        Ok(CpuConcetricData {
             nodes: self.nodes.clone(),
             edges: self.edges.clone(),
             coordinates: data,

@@ -1,19 +1,10 @@
-pub mod concentric;
+pub mod cpu;
 pub mod edge;
 pub mod node;
-pub mod node_angle;
-pub mod node_connections;
-pub mod node_coordinate;
-pub mod normalize;
-pub mod ring;
-pub use concentric::Concentric;
+pub mod timer;
 pub use edge::Edge;
 pub use node::Node;
-pub use node_angle::NodeAngle;
-pub use node_connections::{NodeConnectionValue, NodeConnections};
-pub use node_coordinate::NodeCoordinate;
-pub use normalize::{NormalizeNodeConnections, NormalizedValue};
-pub use ring::Ring;
+pub use timer::Timer;
 
 #[cfg(test)]
 pub mod test_concetric_layout {
@@ -21,6 +12,7 @@ pub mod test_concetric_layout {
 
     use super::*;
     use chrono::Local;
+    use cpu::CpuConcentric;
     use rayon::ThreadPoolBuilder;
     use serde::{Deserialize, Serialize};
     use tabular::{Row, Table};
@@ -67,7 +59,7 @@ pub mod test_concetric_layout {
                     let sample_data_1 =
                         serde_json::from_reader::<_, SampleData>(sample_data_reader).unwrap();
 
-                    let mut layout = Concentric::new(Concentric {
+                    let mut layout = CpuConcentric::new(CpuConcentric {
                         nodes: sample_data_1.nodes,
                         edges: sample_data_1.edges,
                         default_cx: Some(0.0),
@@ -88,7 +80,6 @@ pub mod test_concetric_layout {
                             .with_cell(timer.clone().millis.unwrap().to_string())
                             .with_cell(timer.clone().micros.unwrap().to_string()),
                     );
-
                     // let writer = std::fs::File::options()
                     //     .truncate(true)
                     //     .create(true)

@@ -1,12 +1,10 @@
-use std::f32::consts::PI;
-
+use crate::cpu::Ring;
 use rayon::{
     iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
     slice::ParallelSliceMut,
 };
 use serde::{Deserialize, Serialize};
-
-use crate::Ring;
+use std::f32::consts::PI;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NodeAngle {

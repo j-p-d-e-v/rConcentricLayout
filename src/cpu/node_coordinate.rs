@@ -1,7 +1,6 @@
+use crate::cpu::{NodeAngle, Ring};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
-
-use crate::{NodeAngle, Ring};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeCoordinate {

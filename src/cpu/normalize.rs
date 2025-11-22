@@ -1,7 +1,6 @@
+use crate::cpu::NodeConnections;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
-
-use crate::NodeConnections;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct NormalizeNodeConnections {
