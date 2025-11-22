@@ -1,5 +1,6 @@
 pub mod cpu;
 pub mod edge;
+pub mod gpu;
 pub mod node;
 pub mod timer;
 pub use edge::Edge;
