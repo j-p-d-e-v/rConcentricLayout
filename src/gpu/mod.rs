@@ -1,6 +1,11 @@
+use std::collections::HashMap;
+
 use crate::Edge;
 use crate::Node;
 use bytemuck::{Pod, Zeroable};
+use crossbeam::epoch::Pointable;
+use rayon::iter::IntoParallelRefIterator;
+use rayon::iter::ParallelIterator;
 use serde::Deserialize;
 use serde::Serialize;
 use wgpu::Adapter;
@@ -26,6 +31,7 @@ use wgpu::FeaturesWebGPU;
 use wgpu::Instance;
 use wgpu::InstanceDescriptor;
 use wgpu::InstanceFlags;
+use wgpu::PipelineCache;
 use wgpu::PipelineCompilationOptions;
 use wgpu::PipelineLayoutDescriptor;
 use wgpu::RequestAdapterOptions;
@@ -40,21 +46,20 @@ use wgpu::wgt::CommandEncoderDescriptor;
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct GpuNode {
-    pub id: [u8; 32],
-    pub label: [u8; 32],
+    pub id: u32,
 }
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct GpuEdge {
-    pub id: [u8; 32],
-    pub source: [u8; 32],
-    pub target: [u8; 32],
+    pub id: u32,
+    pub source: u32,
+    pub target: u32,
 }
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct GpuConnections {
-    pub node_id: [u8; 32],
+    pub node_id: u32,
     pub total: u32,
 }
 
@@ -67,7 +72,9 @@ pub async fn test_wgpu() {
     }
     let reader = std::fs::File::options()
         .read(true)
-        .open("storage/sample-data/sample-data.json")
+        //        .open("storage/sample-data/sample-data.json")
+        //.open("storage/sample-data/concentric_nonmesh_star_100.json")
+        .open("storage/sample-data/graph_10000.json")
         .unwrap();
     let data = serde_json::from_reader::<_, SampleData>(reader).unwrap();
 
@@ -83,38 +90,35 @@ pub async fn test_wgpu() {
         })
         .await
         .unwrap();
-
-    let gpu_nodes = data
+    let nodes_id: HashMap<u32, Node> = data
         .nodes
         .iter()
-        .map(|item| {
-            let mut id = [0u8; 32];
-            let i_id = item.id.as_bytes();
-            id[..i_id.len()].copy_from_slice(&i_id[..i_id.len()]);
-            let mut label = [0u8; 32];
-            let i_label = item.label.as_bytes();
-            label[..i_label.len()].copy_from_slice(&i_label[..i_label.len()]);
-            GpuNode { id, label }
-        })
-        .collect::<Vec<GpuNode>>();
-
-    let gpu_edges = data
+        .enumerate()
+        .map(|(index, node)| (index as u32, node.to_owned()))
+        .collect::<HashMap<u32, Node>>();
+    let gpu_nodes: Vec<u32> = nodes_id
+        .par_iter()
+        .map(|item| *item.0)
+        .collect::<Vec<u32>>();
+    let gpu_edges: Vec<[u32; 2]> = data
         .edges
-        .iter()
+        .par_iter()
         .map(|item| {
-            let mut id = [0u8; 32];
-            let i_id = item.id.as_bytes();
-            id[..i_id.len()].copy_from_slice(&i_id[..i_id.len()]);
-            let mut source = [0u8; 32];
-            let i_source = item.source.as_bytes();
-            source[..i_source.len()].copy_from_slice(&i_source[..i_source.len()]);
-            let mut target = [0u8; 32];
-            let i_target = item.target.as_bytes();
-            target[..i_target.len()].copy_from_slice(&i_target[..i_target.len()]);
-            GpuEdge { id, source, target }
+            let source = nodes_id
+                .par_iter()
+                .find_any(|source| source.1.id == item.source)
+                .unwrap()
+                .0
+                .to_owned();
+            let target = nodes_id
+                .par_iter()
+                .find_any(|target| target.1.id == item.target)
+                .unwrap()
+                .0
+                .to_owned();
+            [source, target]
         })
-        .collect::<Vec<GpuEdge>>();
-    let gpu_connections: Vec<GpuConnections> = Vec::new();
+        .collect::<Vec<[u32; 2]>>();
 
     let nodes_buffer = device.create_buffer_init(&BufferInitDescriptor {
         label: Some("nodes-data"),
@@ -128,8 +132,14 @@ pub async fn test_wgpu() {
     });
     let connections_buffer = device.create_buffer(&BufferDescriptor {
         label: Some("connections-data"),
-        size: gpu_nodes.len() as u64,
+        size: ((size_of::<u32>() * 2) * gpu_nodes.len()) as u64,
         usage: BufferUsages::COPY_SRC | BufferUsages::STORAGE,
+        mapped_at_creation: false,
+    });
+    let connections_result_buffer = device.create_buffer(&BufferDescriptor {
+        label: Some("connections-result-data"),
+        size: ((size_of::<u32>() * 2) * gpu_nodes.len()) as u64,
+        usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
         mapped_at_creation: false,
     });
 
@@ -169,9 +179,25 @@ pub async fn test_wgpu() {
         ],
     });
 
+    let data_pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
+        label: Some("data-pipeline-layout"),
+        bind_group_layouts: &[&data_bg_layout],
+        push_constant_ranges: &[],
+    });
+    let connections_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
+        label: Some("connections-pipeline"),
+        layout: Some(&data_pipeline_layout),
+        // layout: None,
+        module: &device.create_shader_module(include_wgsl!("wgsl/connections.wgsl")),
+        entry_point: Some("main"),
+        compilation_options: PipelineCompilationOptions::default(),
+        cache: Default::default(),
+    });
+
     let data_bg_group = device.create_bind_group(&BindGroupDescriptor {
         label: Some("nodes-edges"),
         layout: &data_bg_layout,
+        // layout: &connections_pipeline.get_bind_group_layout(0),
         entries: &[
             BindGroupEntry {
                 binding: 0,
@@ -187,20 +213,6 @@ pub async fn test_wgpu() {
             },
         ],
     });
-    let data_pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-        label: Some("data-pipeline-layout"),
-        bind_group_layouts: &[&data_bg_layout],
-        push_constant_ranges: &[],
-    });
-    let connections_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
-        label: Some("connections-pipeline"),
-        layout: Some(&data_pipeline_layout),
-        module: &device.create_shader_module(include_wgsl!("wgsl/connections.wgsl")),
-        entry_point: Some("main"),
-        compilation_options: PipelineCompilationOptions::default(),
-        cache: None,
-    });
-
     let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
         label: Some("connections-encoder"),
     });
@@ -209,12 +221,33 @@ pub async fn test_wgpu() {
             label: Some("connections-compute-pass"),
             ..Default::default()
         });
-        compute_pass.set_bind_group(0, &data_bg_group, &[]);
+        let total_dispatches = gpu_nodes.len().div_ceil(64) as u32;
         compute_pass.set_pipeline(&connections_pipeline);
-        compute_pass.dispatch_workgroups(64, 1, 1);
+        compute_pass.set_bind_group(0, &data_bg_group, &[]);
+        compute_pass.dispatch_workgroups(total_dispatches, 1, 1);
     }
-
+    encoder.copy_buffer_to_buffer(
+        &connections_buffer,
+        0,
+        &connections_result_buffer,
+        0,
+        Some((size_of::<u32>() * 2 * gpu_nodes.len()) as u64),
+    );
     queue.submit([encoder.finish()]);
-    println!("{:#?}", adapter.get_info());
-    println!("Nodes: {} | Edges: {}", data.nodes.len(), data.edges.len());
+    //    println!("{:#?}", adapter.get_info());
+    println!("Nodes: {} | Edges: {}", gpu_nodes.len(), data.edges.len());
+    //    println!("Nodes: {:?}", gpu_nodes);
+    {
+        let (tx, mut rx) = crossbeam::channel::bounded(1);
+
+        connections_result_buffer.map_async(wgpu::MapMode::Read, .., move |result| {
+            tx.send(result).unwrap();
+        });
+        device.poll(wgpu::PollType::wait_indefinitely()).unwrap();
+        rx.recv().unwrap().unwrap();
+        let result = connections_result_buffer.get_mapped_range(..);
+        let data: &[[u32; 2]] = bytemuck::cast_slice(&result);
+        println!("Resule Size: {}", data.len());
+        println!("Result Data: {:?}", data);
+    }
 }
