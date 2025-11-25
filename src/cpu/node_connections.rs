@@ -1,27 +1,17 @@
+use crate::entities::{NodeConnectionValue, NodeConnectionsData};
+use crate::{Edge, Node};
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 use serde::{Deserialize, Serialize};
 
-use crate::{Edge, Node};
-
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct NodeConnections {
-    pub max_degree: u32,
-    pub min_degree: u32,
-    pub values: Vec<NodeConnectionValue>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NodeConnectionValue {
-    pub node_id: String,
-    pub total: u32,
-}
+pub struct NodeConnections {}
 
 impl NodeConnections {
     /// Get the connection count per node.
     /// Highest count will be the central node
-    pub fn get(nodes: &Vec<Node>, edges: &Vec<Edge>) -> anyhow::Result<Self> {
-        let mut values: Vec<NodeConnectionValue> = nodes
+    pub fn get(nodes: &Vec<Node>, edges: &Vec<Edge>) -> anyhow::Result<NodeConnectionsData> {
+        let values: Vec<NodeConnectionValue> = nodes
             .par_iter()
             .map(|node| {
                 let total = edges
@@ -34,17 +24,6 @@ impl NodeConnections {
                 }
             })
             .collect::<Vec<NodeConnectionValue>>();
-        values.sort_by(|a, b| b.total.cmp(&a.total));
-        let totals = values
-            .par_iter()
-            .map(|item| item.total)
-            .collect::<Vec<u32>>();
-        let max_degree = totals.par_iter().max().unwrap_or(&0).to_owned();
-        let min_degree = totals.par_iter().min().unwrap_or(&0).to_owned();
-        Ok(Self {
-            max_degree,
-            min_degree,
-            values,
-        })
+        Ok(NodeConnectionsData::compute(values))
     }
 }

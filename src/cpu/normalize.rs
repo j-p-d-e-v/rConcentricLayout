@@ -1,4 +1,4 @@
-use crate::cpu::NodeConnections;
+use crate::entities::NodeConnectionsData;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 
@@ -21,7 +21,7 @@ impl NormalizeNodeConnections {
     /// Normalize the node connections
     /// Formula: normalized_value = (degree - min_degree) / (max_degree - min_degree)
     /// degree - is the number of edges per nodes. Refer to the connections per node count
-    pub fn get(node_connections: &NodeConnections) -> anyhow::Result<Self> {
+    pub fn get(node_connections: &NodeConnectionsData) -> anyhow::Result<Self> {
         let max_degree = node_connections.max_degree;
         let min_degree = node_connections.min_degree;
 

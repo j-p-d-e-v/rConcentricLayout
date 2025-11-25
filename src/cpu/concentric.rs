@@ -1,5 +1,6 @@
 use crate::Timer;
 use crate::cpu::{NodeAngle, NodeConnections, NodeCoordinate, NormalizeNodeConnections, Ring};
+use crate::entities::NodeConnectionsData;
 use crate::{Edge, Node};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
@@ -9,7 +10,7 @@ pub struct CpuConcentric {
     pub timer: Timer,
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
-    pub node_connections: NodeConnections,
+    pub node_connections: NodeConnectionsData,
     pub normalized_values: NormalizeNodeConnections,
     pub node_angles: Vec<NodeAngle>,
     pub node_coordinates: Vec<NodeCoordinate>,
