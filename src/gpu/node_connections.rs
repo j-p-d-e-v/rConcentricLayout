@@ -1,11 +1,10 @@
 use crate::{
-    Edge, Node,
     entities::{NodeConnectionValue, NodeConnectionsData},
-    gpu::GpuAdapter,
+    gpu::{GpuAdapter, GpuData},
 };
-use anyhow::{Error, anyhow};
+use anyhow::anyhow;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
     BindingType, Buffer, BufferBindingType, BufferUsages, ComputePassDescriptor,
@@ -15,14 +14,15 @@ use wgpu::{
     wgt::{BufferDescriptor, CommandEncoderDescriptor},
 };
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NodeConnectionsResult {
+    pub gpu_data: Vec<[u32; 2]>,
+    pub data: NodeConnectionsData,
+}
 #[derive(Debug)]
 pub struct NodeConnections {
     pub adapter: GpuAdapter,
-    pub nodes: Vec<Node>,
-    pub edges: Vec<Edge>,
-    gpu_nodes: HashMap<u32, Node>,
-    gpu_edges: Vec<[u32; 2]>,
-    gpu_nodes_id: Vec<u32>,
+    pub gpu_data: GpuData,
 }
 
 #[derive(Debug)]
@@ -34,106 +34,35 @@ pub struct BufferData {
 }
 
 impl NodeConnections {
-    pub async fn new(nodes: &[Node], edges: &[Edge]) -> anyhow::Result<Self> {
+    pub async fn new(gpu_data: &GpuData) -> anyhow::Result<Self> {
         let adapter = GpuAdapter::new().await?;
         Ok(Self {
             adapter,
-            gpu_nodes: HashMap::new(),
-            gpu_edges: Vec::new(),
-            gpu_nodes_id: Vec::new(),
-            nodes: nodes.to_owned(),
-            edges: edges.to_owned(),
+            gpu_data: gpu_data.to_owned(),
         })
-    }
-
-    pub fn get_gpu_edges(&self) -> &Vec<[u32; 2]> {
-        &self.gpu_edges
-    }
-
-    pub fn get_gpu_nodes(&self) -> &HashMap<u32, Node> {
-        &self.gpu_nodes
-    }
-
-    pub fn get_gpu_nodes_bytes_size(&self) -> u64 {
-        let size = std::mem::size_of::<u32>() * self.gpu_nodes.len();
-        size as u64
-    }
-
-    pub fn get_gpu_nodes_id(&self) -> &Vec<u32> {
-        &self.gpu_nodes_id
-    }
-
-    /// Transform the nodes into a flat Vec<u32> to make it much easier to load in the gpu.
-    /// Transform the edges data into Vec<[u32;2]> to make it much easier to load in the gpu.
-    pub async fn prepare_data(&mut self) -> anyhow::Result<()> {
-        let mapping: HashMap<u32, Node> = self
-            .nodes
-            .iter()
-            .enumerate()
-            .map(|(index, item)| (index as u32, item.to_owned()))
-            .collect();
-        let indexes: Vec<u32> = mapping.keys().map(|index| index.to_owned()).collect();
-        self.gpu_nodes = mapping;
-        self.gpu_nodes_id = indexes;
-
-        let edges: Vec<(Result<u32, Error>, Result<u32, Error>)> = self
-            .edges
-            .par_iter()
-            .map(|item| {
-                let source = if let Some(value) = self
-                    .gpu_nodes
-                    .par_iter()
-                    .find_any(|node| node.1.id == item.source)
-                {
-                    Ok(value.0.to_owned())
-                } else {
-                    Err(anyhow!(format!(
-                        "gpu_connections_edge_source_not_found: {:?}",
-                        item
-                    )))
-                };
-                let target = if let Some(value) = self
-                    .gpu_nodes
-                    .par_iter()
-                    .find_any(|node| node.1.id == item.target)
-                {
-                    Ok(value.0.to_owned())
-                } else {
-                    Err(anyhow!(format!(
-                        "gpu_connections_edge_target_not_found: {:?}",
-                        item
-                    )))
-                };
-                (source, target)
-            })
-            .collect();
-        for (source, target) in edges {
-            self.gpu_edges.push([source?, target?]);
-        }
-        Ok(())
     }
 
     pub async fn get_buffer_data(&self) -> BufferData {
         let device = &self.adapter.device;
         let nodes_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("node-connections-nodes-data"),
-            contents: bytemuck::cast_slice(self.get_gpu_nodes_id()),
+            contents: bytemuck::cast_slice(self.gpu_data.get_gpu_nodes_id()),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
         let edges_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("node-connections-edges-data"),
-            contents: bytemuck::cast_slice(self.get_gpu_edges()),
+            contents: bytemuck::cast_slice(self.gpu_data.get_gpu_edges()),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
         let inner_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("node-connections-innert-result"),
-            size: self.get_gpu_nodes_bytes_size() * 2,
+            size: self.gpu_data.get_gpu_nodes_bytes_size() * 2,
             usage: BufferUsages::COPY_SRC | BufferUsages::STORAGE,
             mapped_at_creation: false,
         });
         let outer_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("node-connections-outer-result"),
-            size: self.get_gpu_nodes_bytes_size() * 2,
+            size: self.gpu_data.get_gpu_nodes_bytes_size() * 2,
             usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
             mapped_at_creation: false,
         });
@@ -145,7 +74,7 @@ impl NodeConnections {
         }
     }
 
-    pub async fn run(&self) -> anyhow::Result<NodeConnectionsData> {
+    pub async fn run(&self) -> anyhow::Result<NodeConnectionsResult> {
         let buffer_data = self.get_buffer_data().await;
         let device = &self.adapter.device;
         let data_bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
@@ -224,7 +153,7 @@ impl NodeConnections {
                 label: Some("node-connections-compute-pass"),
                 ..Default::default()
             });
-            let num_dispatchers = self.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
+            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
             compute_pass.set_bind_group(0, &data_bg_group, &[]);
             compute_pass.set_pipeline(&compute_pipeline);
             compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
@@ -236,9 +165,8 @@ impl NodeConnections {
             0,
             buffer_data.inner_result_buffer.size(),
         );
-
         self.adapter.queue.submit([encoder.finish()]);
-        let values: Vec<NodeConnectionValue> = {
+        let result = {
             let (tx, rx) = crossbeam::channel::bounded(1);
             buffer_data
                 .outer_result_buffer
@@ -258,11 +186,14 @@ impl NodeConnections {
             };
             let buffered_data = buffer_data.outer_result_buffer.get_mapped_range(..);
             let data: &[[u32; 2]] = bytemuck::cast_slice(&buffered_data);
-            data.par_iter()
+
+            let values = data
+                .par_iter()
                 .map(|item| {
                     let node_index_id = item[0];
                     let total = item[1];
                     let node = self
+                        .gpu_data
                         .get_gpu_nodes()
                         .get(&node_index_id)
                         .expect("node_index_id does not exists in gpu_nodes mapping");
@@ -271,10 +202,14 @@ impl NodeConnections {
                         total,
                     }
                 })
-                .collect()
+                .collect();
+            NodeConnectionsResult {
+                gpu_data: data.to_vec(),
+                data: NodeConnectionsData::compute(values),
+            }
         };
         buffer_data.outer_result_buffer.unmap();
-        Ok(NodeConnectionsData::compute(values))
+        Ok(result)
     }
 }
 
@@ -282,7 +217,10 @@ impl NodeConnections {
 pub mod test_gpu_node_connections {
     use serde::Deserialize;
 
-    use crate::{Edge, Node, gpu::node_connections::NodeConnections};
+    use crate::{
+        Edge, Node,
+        gpu::{data::GpuData, node_connections::NodeConnections},
+    };
 
     #[tokio::test]
     async fn test_node_connections() {
@@ -297,18 +235,21 @@ pub mod test_gpu_node_connections {
             .open("storage/sample-data/sample-data.json")
             .unwrap();
         let sample_data = serde_json::from_reader::<_, SampleData>(reader).unwrap();
-        assert!(!sample_data.nodes.is_empty());
-        assert!(!sample_data.edges.is_empty());
-        let node_connections = NodeConnections::new(&sample_data.nodes, &sample_data.edges).await;
+        let gpu_data = GpuData::new(&sample_data.nodes, &sample_data.edges);
+        let gpu_data = gpu_data.unwrap();
+        let node_connections = NodeConnections::new(&gpu_data).await;
         assert!(node_connections.is_ok(), "{:?}", node_connections.err());
-        let mut node_connections = node_connections.unwrap();
-        let prepared_data = node_connections.prepare_data().await;
-        assert!(prepared_data.is_ok(), "{:?}", prepared_data.err());
-        assert!(!node_connections.get_gpu_edges().is_empty());
-        assert!(!node_connections.get_gpu_nodes().is_empty());
-        assert!(!node_connections.get_gpu_nodes_id().is_empty());
+        let node_connections = node_connections.unwrap();
         let result = node_connections.run().await;
         assert!(result.is_ok(), "{:?}", result.err());
-        println!("Result: {:#?}", result.unwrap());
+
+        let result = result.unwrap();
+        let mut writer = std::fs::File::options()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open("storage/gpu-node-connections.json")
+            .unwrap();
+        serde_json::to_writer_pretty(&mut writer, &result).unwrap();
     }
 }
