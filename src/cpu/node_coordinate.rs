@@ -50,9 +50,7 @@ impl NodeCoordinate {
         });
         match values {
             Ok(data) => data,
-            Err(_) => {
-                return Err(anyhow!("unable to calculate nodes coorindate"));
-            }
+            Err(_) => Err(anyhow!("unable to calculate nodes coorindate")),
         }
     }
 }

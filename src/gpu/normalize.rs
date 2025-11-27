@@ -167,7 +167,6 @@ impl Normalize {
         });
         let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
             label: Some("normalize-encoder"),
-            ..Default::default()
         });
         let compute_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
             label: Some("normalize-compute-pipeline"),
@@ -242,7 +241,7 @@ impl Normalize {
                 gpu_data
                     .par_iter()
                     .map(|item| item.total.to_owned())
-                    .max_by(|a, b| a.partial_cmp(&b).unwrap())
+                    .max_by(|a, b| a.partial_cmp(b).unwrap())
                     .unwrap()
             }) {
                 Ok(value) => value,
