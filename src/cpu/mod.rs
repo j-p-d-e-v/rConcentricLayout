@@ -8,5 +8,5 @@ pub use concentric::CpuConcentric;
 pub use node_angle::NodeAngle;
 pub use node_connections::NodeConnections;
 pub use node_coordinate::NodeCoordinate;
-pub use normalize::{NormalizeNodeConnections, NormalizedValue};
+pub use normalize::Normalize;
 pub use ring::Ring;

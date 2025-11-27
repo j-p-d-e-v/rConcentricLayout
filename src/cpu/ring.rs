@@ -1,4 +1,3 @@
-use crate::cpu::NormalizeNodeConnections;
 use rayon::{
     iter::{
         IndexedParallelIterator, IntoParallelRefIterator, IntoParallelRefMutIterator,
@@ -8,6 +7,8 @@ use rayon::{
 };
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
+
+use crate::entities::NormalizeData;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Ring {
@@ -26,7 +27,7 @@ impl Ring {
         (((2_f32 * PI) * radius as f32) / L_MIN).floor() as usize
     }
 
-    pub fn get(data: &NormalizeNodeConnections) -> anyhow::Result<Vec<Self>> {
+    pub fn get(data: &NormalizeData) -> anyhow::Result<Vec<Self>> {
         let highest_normalized_value = data.max_value;
         let step_radius: u32 = 40;
 
@@ -41,7 +42,7 @@ impl Ring {
                 },
                 |mut values, item| {
                     let ring_index =
-                        ((highest_normalized_value - item.normalized_value) * 2_f32).floor() as u32;
+                        ((highest_normalized_value - item.value) * 2_f32).floor() as u32;
                     values.push(Ring {
                         index: 0,
                         radius: 0,

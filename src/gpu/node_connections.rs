@@ -3,6 +3,7 @@ use crate::{
     gpu::{GpuAdapter, GpuData},
 };
 use anyhow::anyhow;
+use bytemuck::{Pod, Zeroable};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 use wgpu::{
@@ -14,9 +15,16 @@ use wgpu::{
     wgt::{BufferDescriptor, CommandEncoderDescriptor},
 };
 
+#[derive(Debug, Copy, Clone, Pod, Zeroable, Serialize, Deserialize)]
+#[repr(C)]
+pub struct GpuNodeConnectionValue {
+    pub node_id: u32,
+    pub total: u32,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeConnectionsResult {
-    pub gpu_data: Vec<[u32; 2]>,
+    pub gpu_data: Vec<GpuNodeConnectionValue>,
     pub data: NodeConnectionsData,
 }
 #[derive(Debug)]
@@ -54,15 +62,18 @@ impl NodeConnections {
             contents: bytemuck::cast_slice(self.gpu_data.get_gpu_edges()),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
+        let result_size = (std::mem::size_of::<GpuNodeConnectionValue>()
+            * self.gpu_data.get_gpu_nodes_id().len()) as u64;
+
         let inner_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("node-connections-innert-result"),
-            size: self.gpu_data.get_gpu_nodes_bytes_size() * 2,
+            size: result_size,
             usage: BufferUsages::COPY_SRC | BufferUsages::STORAGE,
             mapped_at_creation: false,
         });
         let outer_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("node-connections-outer-result"),
-            size: self.gpu_data.get_gpu_nodes_bytes_size() * 2,
+            size: result_size,
             usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
             mapped_at_creation: false,
         });
@@ -153,9 +164,10 @@ impl NodeConnections {
                 label: Some("node-connections-compute-pass"),
                 ..Default::default()
             });
-            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
+            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32;
             compute_pass.set_bind_group(0, &data_bg_group, &[]);
             compute_pass.set_pipeline(&compute_pipeline);
+            println!("Num Dispatchers: {}", num_dispatchers);
             compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
         }
         encoder.copy_buffer_to_buffer(
@@ -185,17 +197,15 @@ impl NodeConnections {
                 Err(error) => return Err(anyhow!(error.to_string())),
             };
             let buffered_data = buffer_data.outer_result_buffer.get_mapped_range(..);
-            let data: &[[u32; 2]] = bytemuck::cast_slice(&buffered_data);
-
+            let data: &[GpuNodeConnectionValue] = bytemuck::cast_slice(&buffered_data);
             let values = data
                 .par_iter()
                 .map(|item| {
-                    let node_index_id = item[0];
-                    let total = item[1];
+                    let total = item.total;
                     let node = self
                         .gpu_data
                         .get_gpu_nodes()
-                        .get(&node_index_id)
+                        .get(&item.node_id)
                         .expect("node_index_id does not exists in gpu_nodes mapping");
                     NodeConnectionValue {
                         node_id: node.id.to_owned(),

@@ -1,7 +1,7 @@
 use crate::cpu::{NodeAngle, Ring};
+use anyhow::anyhow;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeCoordinate {
     pub cx: f32,
@@ -25,27 +25,34 @@ impl NodeCoordinate {
     ) -> anyhow::Result<Vec<NodeCoordinate>> {
         let cx = default_cx.unwrap_or(0.0);
         let cy = default_cy.unwrap_or(0.0);
-        let values = nodes_angle
-            .par_iter()
-            .map(|n| {
-                let ring = rings
-                    .iter()
-                    .find(|item| item.nodes.contains(&n.node))
-                    .unwrap();
-                let ring_radius = ring.radius;
+        let values = std::panic::catch_unwind(|| {
+            Ok(nodes_angle
+                .par_iter()
+                .map(|n| {
+                    let ring = rings
+                        .iter()
+                        .find(|item| item.nodes.contains(&n.node))
+                        .unwrap();
+                    let ring_radius = ring.radius;
 
-                let x = cx + ring_radius as f32 * n.angle_radian.cos();
-                let y = cy + ring_radius as f32 * n.angle_radian.sin();
-                NodeCoordinate {
-                    cx,
-                    cy,
-                    x,
-                    y,
-                    radius: ring_radius,
-                    node: n.node.clone(),
-                }
-            })
-            .collect::<Vec<NodeCoordinate>>();
-        Ok(values)
+                    let x = cx + ring_radius as f32 * n.angle_radian.cos();
+                    let y = cy + ring_radius as f32 * n.angle_radian.sin();
+                    NodeCoordinate {
+                        cx,
+                        cy,
+                        x,
+                        y,
+                        radius: ring_radius,
+                        node: n.node.clone(),
+                    }
+                })
+                .collect::<Vec<NodeCoordinate>>())
+        });
+        match values {
+            Ok(data) => data,
+            Err(_) => {
+                return Err(anyhow!("unable to calculate nodes coorindate"));
+            }
+        }
     }
 }

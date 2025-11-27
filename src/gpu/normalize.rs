@@ -1,6 +1,14 @@
-use crate::gpu::{GpuAdapter, GpuData, NodeConnectionsResult};
+use crate::{
+    entities::{NormalizeData, NormalizeValue},
+    gpu::{GpuAdapter, GpuData, NodeConnectionsResult, node_connections::GpuNodeConnectionValue},
+};
 use anyhow::anyhow;
 use bytemuck::{Pod, Zeroable};
+use rayon::{
+    iter::{IntoParallelRefIterator, ParallelIterator},
+    slice::ParallelSliceMut,
+};
+use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
     BindingType, Buffer, BufferBindingType, BufferDescriptor, BufferUsages,
@@ -9,7 +17,13 @@ use wgpu::{
     util::DeviceExt,
 };
 
-#[derive(Debug, Copy, Clone, Pod, Zeroable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NormalizeResult {
+    pub gpu_data: Vec<GpuNormalizeValue>,
+    pub data: NormalizeData,
+}
+
+#[derive(Debug, Copy, Clone, Pod, Zeroable, Serialize, Deserialize)]
 #[repr(C)]
 pub struct GpuNormalizeValue {
     pub node_id: u32,
@@ -44,7 +58,7 @@ impl Normalize {
         })
     }
 
-    pub async fn get_gpu_node_connections_data(&self) -> &Vec<[u32; 2]> {
+    pub async fn get_gpu_node_connections_data(&self) -> &Vec<GpuNodeConnectionValue> {
         &self.node_connections.gpu_data
     }
 
@@ -90,7 +104,7 @@ impl Normalize {
         })
     }
 
-    pub async fn execute(&self) -> anyhow::Result<()> {
+    pub async fn execute(&self) -> anyhow::Result<NormalizeResult> {
         let device = &self.adapter.device;
         let buffer_data = self.get_buffer_data().await?;
         let data_bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
@@ -182,7 +196,7 @@ impl Normalize {
         );
 
         self.adapter.queue.submit([encoder.finish()]);
-        {
+        let result = {
             let (tx, rx) = crossbeam::channel::bounded(1);
 
             buffer_data
@@ -205,10 +219,44 @@ impl Normalize {
             }
 
             let buffer_result = buffer_data.outer_result_buffer.get_mapped_range(..);
-            let data: &[GpuNormalizeValue] = bytemuck::cast_slice(&buffer_result);
-            println!("{:#?}", data);
-        }
-        Ok(())
+            let gpu_data: &[GpuNormalizeValue] = bytemuck::cast_slice(&buffer_result);
+            let mut values: Vec<NormalizeValue> = gpu_data
+                .par_iter()
+                .map(|item| {
+                    let value = item.total;
+                    let node = self
+                        .gpu_data
+                        .get_gpu_nodes()
+                        .get(&item.node_id)
+                        .expect("node is missing at normalize");
+                    let node_id = node.id.to_string();
+                    NormalizeValue { node_id, value }
+                })
+                .collect();
+            values.par_sort_by(|a, b| {
+                b.value
+                    .partial_cmp(&a.value)
+                    .expect("unable to sort normalize value")
+            });
+            let max_value = match std::panic::catch_unwind(|| {
+                gpu_data
+                    .par_iter()
+                    .map(|item| item.total.to_owned())
+                    .max_by(|a, b| a.partial_cmp(&b).unwrap())
+                    .unwrap()
+            }) {
+                Ok(value) => value,
+                Err(_) => {
+                    return Err(anyhow!("unable to find max value at normalize"));
+                }
+            };
+            NormalizeResult {
+                gpu_data: gpu_data.to_vec(),
+                data: NormalizeData { max_value, values },
+            }
+        };
+        buffer_data.outer_result_buffer.unmap();
+        Ok(result)
     }
 }
 
@@ -245,6 +293,14 @@ pub mod test_gpu_normalize {
         assert!(normalize.is_ok(), "{:?}", normalize.err());
         let normalize = normalize.unwrap();
         let result = normalize.execute().await;
-        println!("{:#?}", result);
+        assert!(result.is_ok(), "{:?}", result.err());
+        let result = result.unwrap();
+        let mut writer = std::fs::File::options()
+            .create(true)
+            .truncate(true)
+            .write(true)
+            .open("storage/gpu-normalize.json")
+            .unwrap();
+        serde_json::to_writer_pretty(&mut writer, &result).unwrap();
     }
 }

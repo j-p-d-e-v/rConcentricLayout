@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use bytemuck::{Pod, Zeroable};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::collections::HashMap;
 
@@ -9,15 +10,22 @@ pub struct GpuData {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
     pub gpu_nodes: HashMap<u32, Node>,
-    pub gpu_edges: Vec<[u32; 2]>,
+    pub gpu_edges: Vec<GpuEdge>,
     pub gpu_nodes_id: Vec<u32>,
+}
+
+#[derive(Debug, Clone, Copy, Pod, Zeroable)]
+#[repr(C)]
+pub struct GpuEdge {
+    pub source_node: u32,
+    pub target_node: u32,
 }
 
 impl GpuData {
     /// Transform the nodes into a flat Vec<u32> to make it much easier to load in the gpu.
     /// Transform the edges data into Vec<[u32;2]> to make it much easier to load in the gpu.
     pub fn new(nodes: &[Node], edges: &[Edge]) -> anyhow::Result<Self> {
-        let mut gpu_edges: Vec<[u32; 2]> = Vec::new();
+        let mut gpu_edges: Vec<GpuEdge> = Vec::new();
         let gpu_nodes: HashMap<u32, Node> = nodes
             .iter()
             .enumerate()
@@ -55,7 +63,10 @@ impl GpuData {
                 })
                 .collect();
         for (source, target) in edges_source_target {
-            gpu_edges.push([source?, target?]);
+            gpu_edges.push(GpuEdge {
+                source_node: source?,
+                target_node: target?,
+            });
         }
         Ok(Self {
             nodes: nodes.to_vec(),
@@ -66,7 +77,7 @@ impl GpuData {
         })
     }
 
-    pub fn get_gpu_edges(&self) -> &Vec<[u32; 2]> {
+    pub fn get_gpu_edges(&self) -> &Vec<GpuEdge> {
         &self.gpu_edges
     }
 
