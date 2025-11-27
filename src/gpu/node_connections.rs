@@ -164,10 +164,9 @@ impl NodeConnections {
                 label: Some("node-connections-compute-pass"),
                 ..Default::default()
             });
-            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32;
+            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
             compute_pass.set_bind_group(0, &data_bg_group, &[]);
             compute_pass.set_pipeline(&compute_pipeline);
-            println!("Num Dispatchers: {}", num_dispatchers);
             compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
         }
         encoder.copy_buffer_to_buffer(
@@ -178,7 +177,7 @@ impl NodeConnections {
             buffer_data.inner_result_buffer.size(),
         );
         self.adapter.queue.submit([encoder.finish()]);
-        let result = {
+        let result: NodeConnectionsResult = {
             let (tx, rx) = crossbeam::channel::bounded(1);
             buffer_data
                 .outer_result_buffer
@@ -196,25 +195,30 @@ impl NodeConnections {
                 }
                 Err(error) => return Err(anyhow!(error.to_string())),
             };
+
             let buffered_data = buffer_data.outer_result_buffer.get_mapped_range(..);
-            let data: &[GpuNodeConnectionValue] = bytemuck::cast_slice(&buffered_data);
-            let values = data
+            let gpu_data: &[GpuNodeConnectionValue] = bytemuck::cast_slice(&buffered_data);
+            let mut values: Vec<NodeConnectionValue> = Vec::new();
+            let mapped_values = gpu_data
                 .par_iter()
-                .map(|item| {
-                    let total = item.total;
-                    let node = self
-                        .gpu_data
-                        .get_gpu_nodes()
-                        .get(&item.node_id)
-                        .expect("node_index_id does not exists in gpu_nodes mapping");
-                    NodeConnectionValue {
-                        node_id: node.id.to_owned(),
-                        total,
-                    }
-                })
-                .collect();
+                .map(
+                    |item| match self.gpu_data.get_gpu_nodes().get(&item.node_id) {
+                        Some(node) => Ok(NodeConnectionValue {
+                            node_id: node.id.to_owned(),
+                            total: item.total,
+                        }),
+                        None => Err(anyhow!(format!(
+                            "unable to find node for index {:#?}",
+                            item
+                        ))),
+                    },
+                )
+                .collect::<Vec<Result<NodeConnectionValue, anyhow::Error>>>();
+            for value in mapped_values {
+                values.push(value?);
+            }
             NodeConnectionsResult {
-                gpu_data: data.to_vec(),
+                gpu_data: gpu_data.to_vec(),
                 data: NodeConnectionsData::compute(values),
             }
         };
