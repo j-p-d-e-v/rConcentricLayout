@@ -8,15 +8,10 @@ use rayon::{
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
 
-use crate::entities::NormalizeData;
+use crate::entities::{NormalizeData, RingData};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct Ring {
-    pub index: u32, //Sequential Index
-    pub original_index: u32,
-    pub nodes: Vec<String>,
-    pub radius: u32,
-}
+pub struct Ring {}
 
 impl Ring {
     pub fn get_radius(radius: u32, ring_index: u32) -> u32 {
@@ -27,7 +22,7 @@ impl Ring {
         (((2_f32 * PI) * radius as f32) / L_MIN).floor() as usize
     }
 
-    pub fn get(data: &NormalizeData) -> anyhow::Result<Vec<Self>> {
+    pub fn get(data: &NormalizeData) -> anyhow::Result<Vec<RingData>> {
         let highest_normalized_value = data.max_value;
         let step_radius: u32 = 40;
 
@@ -37,13 +32,13 @@ impl Ring {
             .par_iter()
             .fold(
                 || {
-                    let values: Vec<Ring> = Vec::new();
+                    let values: Vec<RingData> = Vec::new();
                     values
                 },
                 |mut values, item| {
                     let ring_index =
                         ((highest_normalized_value - item.value) * 2_f32).floor() as u32;
-                    values.push(Ring {
+                    values.push(RingData {
                         index: 0,
                         radius: 0,
                         original_index: ring_index,
@@ -54,7 +49,7 @@ impl Ring {
             )
             .reduce(
                 || {
-                    let values: Vec<Ring> = Vec::new();
+                    let values: Vec<RingData> = Vec::new();
                     values
                 },
                 |mut values, items| {
@@ -78,18 +73,18 @@ impl Ring {
                 item.index = index as u32;
                 item.to_owned()
             })
-            .collect::<Vec<Ring>>();
+            .collect::<Vec<RingData>>();
         // Calculate Max Nodes per ring then if total nodes of the ring exceeds to the calculated max nodes, it will be moved to the next ring.
         // If the next ring exists, it will append to the existing next ring nodes but take note the appended node will be added at the top.
         // If the next ring does exists, it will create a new one.
 
-        let mut previous_value: Option<Ring> = None;
+        let mut previous_value: Option<RingData> = None;
         loop {
             values = values
                 .par_iter()
                 .fold(
                     || {
-                        let values: Vec<Ring> = Vec::new();
+                        let values: Vec<RingData> = Vec::new();
                         values
                     },
                     |mut values, item| {
@@ -127,7 +122,7 @@ impl Ring {
                                     Vec::new()
                                 };
                             if !non_spilled_nodes.is_empty() {
-                                values.push(Ring {
+                                values.push(RingData {
                                     radius,
                                     nodes: non_spilled_nodes,
                                     ..item.to_owned()
@@ -136,7 +131,7 @@ impl Ring {
                             if !spilled_nodes.is_empty() {
                                 let ring_index = ring_index + 1;
                                 let min_radius = step_radius + (10 * ring_index);
-                                values.push(Ring {
+                                values.push(RingData {
                                     index: ring_index,
                                     nodes: spilled_nodes,
                                     radius: Self::get_radius(min_radius, ring_index),
@@ -149,7 +144,7 @@ impl Ring {
                 )
                 .reduce(
                     || {
-                        let values: Vec<Ring> = Vec::new();
+                        let values: Vec<RingData> = Vec::new();
                         values
                     },
                     |mut values, items| {

@@ -1,4 +1,4 @@
-use crate::cpu::{NodeAngle, Ring};
+use crate::{cpu::NodeAngle, entities::RingData};
 use anyhow::anyhow;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,7 @@ impl NodeCoordinate {
     /// y = cy + r * sin(<theta/radian>)
     pub fn get(
         nodes_angle: &Vec<NodeAngle>,
-        rings: &[Ring],
+        rings: &[RingData],
         default_cx: Option<f32>,
         default_cy: Option<f32>,
     ) -> anyhow::Result<Vec<NodeCoordinate>> {

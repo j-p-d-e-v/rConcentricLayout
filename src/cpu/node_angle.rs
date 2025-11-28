@@ -1,10 +1,11 @@
-use crate::cpu::Ring;
 use rayon::{
     iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
     slice::ParallelSliceMut,
 };
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
+
+use crate::entities::RingData;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NodeAngle {
@@ -18,7 +19,7 @@ impl NodeAngle {
     /// Compute the angle for each nodes in a ring. This will contain both angle in radian and egree value
     /// Step Angle - The incrementor of the angle. Formula: 360 / total nodes
     /// Radian - The position in radian. Formula: Ange * (PI / 180)
-    pub fn get(rings: &Vec<Ring>) -> anyhow::Result<Vec<NodeAngle>> {
+    pub fn get(rings: &Vec<RingData>) -> anyhow::Result<Vec<NodeAngle>> {
         //        let mut values: Vec<NodeAngle> = Vec::new();
         let mut values: Vec<NodeAngle> = rings
             .par_iter()
