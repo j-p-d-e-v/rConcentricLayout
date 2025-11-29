@@ -1,11 +1,12 @@
 use anyhow::anyhow;
 use bytemuck::{Pod, Zeroable};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::{Edge, Node};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct GpuData {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
@@ -14,7 +15,7 @@ pub struct GpuData {
     pub gpu_nodes_id: Vec<u32>,
 }
 
-#[derive(Debug, Clone, Copy, Pod, Zeroable)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Pod, Zeroable)]
 #[repr(C)]
 pub struct GpuEdge {
     pub source_node: u32,

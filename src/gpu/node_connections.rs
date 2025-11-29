@@ -1,18 +1,14 @@
-use crate::{
-    entities::{NodeConnectionValue, NodeConnectionsData},
-    gpu::{GpuAdapter, GpuData},
-};
+use crate::gpu::{GpuAdapter, GpuData};
 use anyhow::anyhow;
 use bytemuck::{Pod, Zeroable};
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
-    BindingType, Buffer, BufferBindingType, BufferUsages, ComputePassDescriptor,
+    BindingType, Buffer, BufferBindingType, BufferUsages, BufferView, ComputePassDescriptor,
     ComputePipelineDescriptor, PipelineCompilationOptions, PipelineLayoutDescriptor, ShaderStages,
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
-    wgt::{BufferDescriptor, CommandEncoderDescriptor},
+    wgt::{BufferDescriptor, CommandEncoderDescriptor, PollType},
 };
 
 #[derive(Debug, Copy, Clone, Pod, Zeroable, Serialize, Deserialize)]
@@ -22,10 +18,11 @@ pub struct GpuNodeConnectionValue {
     pub total: u32,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct NodeConnectionsResult {
     pub gpu_data: Vec<GpuNodeConnectionValue>,
-    pub data: NodeConnectionsData,
+    pub max_degree: u32,
+    pub min_degree: u32,
 }
 #[derive(Debug)]
 pub struct NodeConnections {
@@ -37,8 +34,10 @@ pub struct NodeConnections {
 pub struct BufferData {
     nodes_buffer: Buffer,
     edges_buffer: Buffer,
+    inner_min_max_buffer: Buffer,
     inner_result_buffer: Buffer,
     outer_result_buffer: Buffer,
+    outer_min_max_buffer: Buffer,
 }
 
 impl NodeConnections {
@@ -62,6 +61,11 @@ impl NodeConnections {
             contents: bytemuck::cast_slice(self.gpu_data.get_gpu_edges()),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
+        let inner_min_max_buffer = device.create_buffer_init(&BufferInitDescriptor {
+            label: Some("node-connections-inner-min-max-data"),
+            contents: bytemuck::cast_slice(&[0u32; 2]),
+            usage: BufferUsages::COPY_SRC | BufferUsages::STORAGE,
+        });
         let result_size = (std::mem::size_of::<GpuNodeConnectionValue>()
             * self.gpu_data.get_gpu_nodes_id().len()) as u64;
 
@@ -77,15 +81,46 @@ impl NodeConnections {
             usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
             mapped_at_creation: false,
         });
+        let outer_min_max_buffer = device.create_buffer(&BufferDescriptor {
+            label: Some("node-connections-outer-min-max-result"),
+            size: inner_min_max_buffer.size(),
+            usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
+            mapped_at_creation: false,
+        });
         BufferData {
             nodes_buffer,
             edges_buffer,
+            inner_min_max_buffer,
             inner_result_buffer,
             outer_result_buffer,
+            outer_min_max_buffer,
         }
     }
 
-    pub async fn run(&self) -> anyhow::Result<NodeConnectionsResult> {
+    async fn get_buffer_view(&self, buffer_data: &Buffer) -> anyhow::Result<BufferView> {
+        let device = &self.adapter.device;
+        let (tx, rx) = crossbeam::channel::bounded(1);
+        buffer_data.map_async(wgpu::MapMode::Read, .., move |result| {
+            tx.send(result)
+                .expect("unable to send node connection result")
+        });
+        device.poll(PollType::wait_indefinitely())?;
+
+        match rx.recv() {
+            Ok(received) => {
+                if let Err(error) = received {
+                    return Err(anyhow!(error.to_string()));
+                }
+            }
+            Err(error) => {
+                return Err(anyhow!(error.to_string()));
+            }
+        }
+        let data = buffer_data.get_mapped_range(..);
+        Ok(data)
+    }
+
+    pub async fn execute(&self) -> anyhow::Result<NodeConnectionsResult> {
         let buffer_data = self.get_buffer_data().await;
         let device = &self.adapter.device;
         let data_bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
@@ -121,6 +156,16 @@ impl NodeConnections {
                     },
                     count: None,
                 },
+                BindGroupLayoutEntry {
+                    binding: 3,
+                    visibility: ShaderStages::COMPUTE,
+                    ty: BindingType::Buffer {
+                        ty: BufferBindingType::Storage { read_only: false },
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
             ],
         });
         let data_pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
@@ -144,30 +189,38 @@ impl NodeConnections {
                     binding: 2,
                     resource: buffer_data.inner_result_buffer.as_entire_binding(),
                 },
+                BindGroupEntry {
+                    binding: 3,
+                    resource: buffer_data.inner_min_max_buffer.as_entire_binding(),
+                },
             ],
         });
-        let compute_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
-            label: Some("node-connections-compute-pipeline"),
-            layout: Some(&data_pipeline_layout),
-            // layout: None,
-            module: &device.create_shader_module(include_wgsl!("wgsl/connections.wgsl")),
-            entry_point: Some("main"),
-            compilation_options: PipelineCompilationOptions::default(),
-            cache: Default::default(),
-        });
-
         let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
             label: Some("node-connections-encoder"),
         });
-        {
-            let mut compute_pass = encoder.begin_compute_pass(&ComputePassDescriptor {
-                label: Some("node-connections-compute-pass"),
-                ..Default::default()
+        for entry_point in &["get_connections", "get_min", "get_max"] {
+            let compute_pipeline_label =
+                format!("node-connections-{}-compute-pipeline", entry_point);
+            let compute_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
+                label: Some(&compute_pipeline_label),
+                layout: Some(&data_pipeline_layout),
+                // layout: None,
+                module: &device.create_shader_module(include_wgsl!("wgsl/connections.wgsl")),
+                entry_point: Some(&entry_point),
+                compilation_options: PipelineCompilationOptions::default(),
+                cache: Default::default(),
             });
-            let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
-            compute_pass.set_bind_group(0, &data_bg_group, &[]);
-            compute_pass.set_pipeline(&compute_pipeline);
-            compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
+            {
+                let compute_pass_label = format!("node-connections-{}-compute-pass", entry_point);
+                let mut compute_pass = encoder.begin_compute_pass(&ComputePassDescriptor {
+                    label: Some(&compute_pass_label),
+                    ..Default::default()
+                });
+                let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
+                compute_pass.set_bind_group(0, &data_bg_group, &[]);
+                compute_pass.set_pipeline(&compute_pipeline);
+                compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
+            }
         }
         encoder.copy_buffer_to_buffer(
             &buffer_data.inner_result_buffer,
@@ -176,50 +229,28 @@ impl NodeConnections {
             0,
             buffer_data.inner_result_buffer.size(),
         );
+        encoder.copy_buffer_to_buffer(
+            &buffer_data.inner_min_max_buffer,
+            0,
+            &buffer_data.outer_min_max_buffer,
+            0,
+            buffer_data.inner_min_max_buffer.size(),
+        );
         self.adapter.queue.submit([encoder.finish()]);
         let result: NodeConnectionsResult = {
-            let (tx, rx) = crossbeam::channel::bounded(1);
-            buffer_data
-                .outer_result_buffer
-                .map_async(wgpu::MapMode::Read, .., move |result| {
-                    tx.send(result)
-                        .expect("node connections unable to send result");
-                });
-
-            device.poll(wgpu::wgt::PollType::wait_indefinitely())?;
-            match rx.recv() {
-                Ok(data) => {
-                    if let Err(error) = data {
-                        return Err(anyhow!(error.to_string()));
-                    }
-                }
-                Err(error) => return Err(anyhow!(error.to_string())),
-            };
-
-            let buffered_data = buffer_data.outer_result_buffer.get_mapped_range(..);
+            let buffered_data = self
+                .get_buffer_view(&buffer_data.outer_result_buffer)
+                .await?;
             let gpu_data: &[GpuNodeConnectionValue] = bytemuck::cast_slice(&buffered_data);
-            let mut values: Vec<NodeConnectionValue> = Vec::new();
-            let mapped_values = gpu_data
-                .par_iter()
-                .map(
-                    |item| match self.gpu_data.get_gpu_nodes().get(&item.node_id) {
-                        Some(node) => Ok(NodeConnectionValue {
-                            node_id: node.id.to_owned(),
-                            total: item.total,
-                        }),
-                        None => Err(anyhow!(format!(
-                            "unable to find node for index {:#?}",
-                            item
-                        ))),
-                    },
-                )
-                .collect::<Vec<Result<NodeConnectionValue, anyhow::Error>>>();
-            for value in mapped_values {
-                values.push(value?);
-            }
+
+            let buffered_data = self
+                .get_buffer_view(&buffer_data.outer_min_max_buffer)
+                .await?;
+            let min_max: &[u32] = bytemuck::cast_slice(&buffered_data);
             NodeConnectionsResult {
                 gpu_data: gpu_data.to_vec(),
-                data: NodeConnectionsData::compute(values),
+                max_degree: min_max[1],
+                min_degree: min_max[0],
             }
         };
         buffer_data.outer_result_buffer.unmap();
@@ -254,7 +285,7 @@ pub mod test_gpu_node_connections {
         let node_connections = NodeConnections::new(&gpu_data).await;
         assert!(node_connections.is_ok(), "{:?}", node_connections.err());
         let node_connections = node_connections.unwrap();
-        let result = node_connections.run().await;
+        let result = node_connections.execute().await;
         assert!(result.is_ok(), "{:?}", result.err());
 
         let result = result.unwrap();

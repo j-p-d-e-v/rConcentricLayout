@@ -1,13 +1,8 @@
-use crate::{
-    entities::{NormalizeData, NormalizeValue},
-    gpu::{GpuAdapter, GpuData, NodeConnectionsResult, node_connections::GpuNodeConnectionValue},
+use crate::gpu::{
+    GpuAdapter, GpuData, NodeConnectionsResult, node_connections::GpuNodeConnectionValue,
 };
-use anyhow::anyhow;
 use bytemuck::{Pod, Zeroable};
-use rayon::{
-    iter::{IntoParallelRefIterator, ParallelIterator},
-    slice::ParallelSliceMut,
-};
+use rayon::slice::ParallelSliceMut;
 use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
@@ -17,10 +12,9 @@ use wgpu::{
     util::DeviceExt,
 };
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct NormalizeResult {
     pub gpu_data: Vec<GpuNormalizeValue>,
-    pub data: NormalizeData,
 }
 
 #[derive(Debug, Copy, Clone, Pod, Zeroable, Serialize, Deserialize)]
@@ -66,8 +60,8 @@ impl Normalize {
         let device = &self.adapter.device;
 
         let min_max: &[u32; 2] = &[
-            self.node_connections.data.min_degree,
-            self.node_connections.data.max_degree,
+            self.node_connections.min_degree,
+            self.node_connections.max_degree,
         ];
         let node_connections_data = self.get_gpu_node_connections_data().await;
         let node_connections_buffer =
@@ -204,55 +198,19 @@ impl Normalize {
                     tx.send(result).expect("normalize unable to send result")
                 });
 
-            device.poll(wgpu::wgt::PollType::wait_indefinitely())?;
+            device
+                .poll(wgpu::wgt::PollType::wait_indefinitely())
+                .expect("unable to wait for device in normalize");
 
-            match rx.recv() {
-                Ok(received) => {
-                    if let Err(error) = received {
-                        return Err(anyhow!(error.to_string()));
-                    }
-                }
-                Err(error) => {
-                    return Err(anyhow!(error.to_string()));
-                }
-            }
-
+            rx.recv()
+                .expect("unable to receive buffer in normalize")
+                .expect("unuable to read received buffer in normalize");
             let buffer_result = buffer_data.outer_result_buffer.get_mapped_range(..);
             let gpu_data: &[GpuNormalizeValue] = bytemuck::cast_slice(&buffer_result);
-            let mut values: Vec<NormalizeValue> = gpu_data
-                .par_iter()
-                .map(|item| {
-                    let value = item.total;
-                    let node = self
-                        .gpu_data
-                        .get_gpu_nodes()
-                        .get(&item.node_id)
-                        .expect("node is missing at normalize");
-                    let node_id = node.id.to_string();
-                    NormalizeValue { node_id, value }
-                })
-                .collect();
-            values.par_sort_by(|a, b| {
-                b.value
-                    .partial_cmp(&a.value)
-                    .expect("unable to sort normalize value")
-            });
-            let max_value = match std::panic::catch_unwind(|| {
-                gpu_data
-                    .par_iter()
-                    .map(|item| item.total.to_owned())
-                    .max_by(|a, b| a.partial_cmp(b).unwrap())
-                    .unwrap()
-            }) {
-                Ok(value) => value,
-                Err(_) => {
-                    return Err(anyhow!("unable to find max value at normalize"));
-                }
-            };
-            NormalizeResult {
-                gpu_data: gpu_data.to_vec(),
-                data: NormalizeData { max_value, values },
-            }
+            let mut gpu_data = gpu_data.to_vec();
+            // Offload to GPU
+            gpu_data.par_sort_by(|a, b| b.total.partial_cmp(&a.total).unwrap());
+            NormalizeResult { gpu_data: gpu_data }
         };
         buffer_data.outer_result_buffer.unmap();
         Ok(result)

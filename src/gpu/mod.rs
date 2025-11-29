@@ -1,8 +1,10 @@
 pub mod adapter;
+pub mod concentric;
 pub mod data;
 pub mod node_connections;
-pub mod ring;
+pub mod node_positions;
 pub use adapter::GpuAdapter;
+pub use concentric::GpuConcentric;
 pub use data::GpuData;
 pub use node_connections::{NodeConnections, NodeConnectionsResult};
 pub mod normalize;

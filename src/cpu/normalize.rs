@@ -24,10 +24,15 @@ impl Normalize {
                     (item.total - min_degree) as f32 / (max_degree - min_degree) as f32;
                 NormalizeValue {
                     node_id: item.node_id.clone(),
-                    value: normalized_value,
+                    value: if normalized_value.is_nan() {
+                        0.0
+                    } else {
+                        normalized_value
+                    },
                 }
             })
             .collect::<Vec<NormalizeValue>>();
+
         values.par_sort_by(|a, b| {
             b.value
                 .partial_cmp(&a.value)
