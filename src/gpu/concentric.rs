@@ -24,7 +24,7 @@ pub struct GpuConcentric {
 pub struct GpuConcetricData {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
-    pub positions: Vec<NodePositionData>,
+    pub coordinates: Vec<NodePositionData>,
 }
 
 impl GpuConcentric {
@@ -47,7 +47,7 @@ impl GpuConcentric {
         Ok(GpuConcetricData {
             nodes: self.nodes.clone(),
             edges: self.edges.clone(),
-            positions: data,
+            coordinates: data,
         })
     }
 

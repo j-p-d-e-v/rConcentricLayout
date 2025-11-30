@@ -277,7 +277,7 @@ pub mod test_gpu_node_connections {
 
         let reader = std::fs::File::options()
             .read(true)
-            .open("storage/sample-data/sample-data.json")
+            .open("storage/sample-data/graph_10000.json")
             .unwrap();
         let sample_data = serde_json::from_reader::<_, SampleData>(reader).unwrap();
         let gpu_data = GpuData::new(&sample_data.nodes, &sample_data.edges);
@@ -287,8 +287,8 @@ pub mod test_gpu_node_connections {
         let node_connections = node_connections.unwrap();
         let result = node_connections.execute().await;
         assert!(result.is_ok(), "{:?}", result.err());
-
         let result = result.unwrap();
+        println!("Nodes: {}", result.gpu_data.len());
         let mut writer = std::fs::File::options()
             .create(true)
             .truncate(true)

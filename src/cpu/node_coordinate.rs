@@ -9,7 +9,7 @@ pub struct NodeCoordinate {
     pub radius: u32,
     pub x: f32,
     pub y: f32,
-    pub node: String,
+    pub node_id: String,
 }
 
 impl NodeCoordinate {
@@ -43,7 +43,7 @@ impl NodeCoordinate {
                         x,
                         y,
                         radius: ring_radius,
-                        node: n.node.clone(),
+                        node_id: n.node.clone(),
                     }
                 })
                 .collect::<Vec<NodeCoordinate>>())

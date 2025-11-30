@@ -52,7 +52,6 @@ fn main(
         let node_id = normalize_node.node_id;
         let x = cx + f32(ring_radius) * cos(angle_radian);
         let y = cy + f32(ring_radius) * sin(angle_radian);
-        node_index += 1;
         result[i] = RingData(
             index,
             ring_radius,
@@ -63,6 +62,7 @@ fn main(
             x,
             y,
             node_id);
+        node_index++;
     }
 
 }

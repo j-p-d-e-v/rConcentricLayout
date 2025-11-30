@@ -29,20 +29,20 @@ pub mod test_concentric_layout {
             edges: Vec<Edge>,
         }
         let samples = [
-            "concentric_nonmesh_star_100.json",                       //0
-            "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
-            "sample-data-100-nodes-full-mesh-15-rings.json",          //2
-            "sample-data-100-nodes-full-mesh.json",                   //3-
-            "sample-data-cytoscape.json",                             //4
-            "sample-data.json",                                       //5
-            "sample_graph_1000.json",                                 //6
-            "sample_tree_1000.json",                                  //7
-            "sample_scalefree_1000.json",                             //8
-            // "graph_10000.json",                                       //9,
-            // "graph_20000.json",                                       //10,
-            // "graph_50000.json",                                       //11,
-            // "graph_100000.json",                                      //12
-            "telco_realistic_1000_nodes.json", //13
+            // "concentric_nonmesh_star_100.json",                       //0
+            // "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
+            // "sample-data-100-nodes-full-mesh-15-rings.json",          //2
+            // "sample-data-100-nodes-full-mesh.json",                   //3-
+            // "sample-data-cytoscape.json",                             //4
+            "sample-data.json", //5
+                                // "sample_graph_1000.json",                                 //6
+                                // "sample_tree_1000.json",                                  //7
+                                // "sample_scalefree_1000.json",                             //8
+                                // "graph_10000.json",                                       //9,
+                                // "graph_20000.json",                                       //10,
+                                // "graph_50000.json",                                       //11,
+                                // "graph_100000.json",                                      //12
+                                //"telco_realistic_1000_nodes.json", //13
         ];
         let mut benchmark: Vec<String> = Vec::new();
         for total_threads in [2, 4, 8, 16, 32] {
@@ -95,7 +95,7 @@ pub mod test_concentric_layout {
                         .truncate(true)
                         .create(true)
                         .write(true)
-                        .open(format!("storage/output-{}", sample_file))
+                        .open(format!("storage/output-cpu-{}", sample_file))
                         .unwrap();
                     serde_json::to_writer_pretty(writer, &data).unwrap();
                 }
@@ -123,20 +123,20 @@ pub mod test_concentric_layout {
             edges: Vec<Edge>,
         }
         let samples = [
-            //"concentric_nonmesh_star_100.json", //0
-            // "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
-            // "sample-data-100-nodes-full-mesh-15-rings.json",          //2
-            // "sample-data-100-nodes-full-mesh.json",                   //3-
-            // "sample-data-cytoscape.json",                             //4
-            //"sample-data.json", //5
-            "sample_graph_1000.json", //6
-                                      // "sample_tree_1000.json",                                  //7
-                                      // "sample_scalefree_1000.json",                             //8
-                                      //"graph_10000.json", //9,
-                                      //"graph_20000.json", //10,
-                                      //"graph_50000.json", //11,
-                                      // "graph_100000.json",                                      //12
-                                      //"telco_realistic_1000_nodes.json", //13
+            "concentric_nonmesh_star_100.json",                       //0
+            "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
+            "sample-data-100-nodes-full-mesh-15-rings.json",          //2
+            "sample-data-100-nodes-full-mesh.json",                   //3-
+            "sample-data-cytoscape.json",                             //4
+            "sample-data.json",                                       //5
+            "sample_graph_1000.json",                                 //6
+            "sample_tree_1000.json",                                  //7
+            "sample_scalefree_1000.json",                             //8
+            "graph_10000.json",                                       //9,
+            "graph_20000.json",                                       //10,
+            "graph_50000.json",                                       //11,
+            "graph_100000.json",                                      //12
+            "telco_realistic_1000_nodes.json",                        //13
         ];
         let mut benchmark: Vec<String> = Vec::new();
         for total_threads in [2, 4, 8, 16, 32] {
@@ -170,7 +170,7 @@ pub mod test_concentric_layout {
                     let result = layout.get().await;
                     let timer = layout.timer.clone();
                     let data = result.unwrap();
-                    assert_eq!(data.nodes.len(), data.positions.len());
+                    assert_eq!(data.nodes.len(), data.coordinates.len());
                     table = table.with_row(
                         Row::new()
                             .with_cell(thread_pool.current_num_threads())
@@ -181,21 +181,21 @@ pub mod test_concentric_layout {
                             .with_cell(timer.clone().millis.unwrap().to_string())
                             .with_cell(timer.clone().micros.unwrap().to_string()),
                     );
-                    let writer = std::fs::File::options()
-                        .truncate(true)
-                        .create(true)
-                        .write(true)
-                        .open(format!("storage/calculation-gpu-{}", sample_file))
-                        .unwrap();
-                    serde_json::to_writer_pretty(writer, &layout).unwrap();
-                    let writer = std::fs::File::options()
-                        .truncate(true)
-                        .create(true)
-                        .write(true)
-                        .open(format!("storage/output-gpu-{}", sample_file))
-                        .unwrap();
-                    serde_json::to_writer_pretty(writer, &data).unwrap();
-                    println!("Data Prepare: {}s, {}ms",data_prepare_timer.elapsed().as_secs(),data_prepare_timer.elapsed().as_millis());
+                   // let writer = std::fs::File::options()
+                   //     .truncate(true)
+                   //     .create(true)
+                   //     .write(true)
+                   //     .open(format!("storage/calculation-gpu-{}", sample_file))
+                   //     .unwrap();
+                    //serde_json::to_writer_pretty(writer, &layout).unwrap();
+                   // let writer = std::fs::File::options()
+                   //     .truncate(true)
+                   //     .create(true)
+                   //     .write(true)
+                   //     .open(format!("storage/output-gpu-{}", sample_file))
+                   //     .unwrap();
+                   // serde_json::to_writer_pretty(writer, &data).unwrap();
+                    println!("Data Prepare {}: {}s, {}ms",sample_file,data_prepare_timer.elapsed().as_secs(),data_prepare_timer.elapsed().as_millis());
                 }
 
                 benchmark.push(table.to_string());

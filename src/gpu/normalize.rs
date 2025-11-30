@@ -2,7 +2,6 @@ use crate::gpu::{
     GpuAdapter, GpuData, NodeConnectionsResult, node_connections::GpuNodeConnectionValue,
 };
 use bytemuck::{Pod, Zeroable};
-use rayon::slice::ParallelSliceMut;
 use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
@@ -30,6 +29,7 @@ pub struct BufferData {
     pub node_connections_buffer: Buffer,
     pub inner_result_buffer: Buffer,
     pub outer_result_buffer: Buffer,
+    pub sort_toggle_buffer: Buffer,
 }
 
 #[derive(Debug)]
@@ -75,6 +75,11 @@ impl Normalize {
             contents: bytemuck::cast_slice(min_max),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
+        let sort_toggle_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("normalize-sort-toggle"),
+            contents: bytemuck::bytes_of(&0u32),
+            usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+        });
         let result_size = self.gpu_data.get_gpu_nodes_id().len() as u64
             * std::mem::size_of::<GpuNormalizeValue>() as u64;
         let inner_result_buffer = device.create_buffer(&BufferDescriptor {
@@ -95,6 +100,7 @@ impl Normalize {
             outer_result_buffer,
             inner_result_buffer,
             node_connections_buffer,
+            sort_toggle_buffer,
         })
     }
 
@@ -134,6 +140,16 @@ impl Normalize {
                     },
                     count: None,
                 },
+                BindGroupLayoutEntry {
+                    binding: 3,
+                    visibility: ShaderStages::COMPUTE,
+                    ty: BindingType::Buffer {
+                        ty: BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                },
             ],
         });
         let data_bg = device.create_bind_group(&BindGroupDescriptor {
@@ -152,6 +168,10 @@ impl Normalize {
                     binding: 2,
                     resource: buffer_data.inner_result_buffer.as_entire_binding(),
                 },
+                BindGroupEntry {
+                    binding: 3,
+                    resource: buffer_data.sort_toggle_buffer.as_entire_binding(),
+                },
             ],
         });
         let data_pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
@@ -159,36 +179,72 @@ impl Normalize {
             bind_group_layouts: &[&data_bg_layout],
             ..Default::default()
         });
+        let num_dispatchers = (self.node_connections.gpu_data.len().div_ceil(64) + 10) as u32;
         let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
             label: Some("normalize-encoder"),
         });
-        let compute_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
-            label: Some("normalize-compute-pipeline"),
-            layout: Some(&data_pipeline_layout),
-            module: &device.create_shader_module(include_wgsl!("wgsl/normalize.wgsl")),
-            entry_point: Some("main"),
-            compilation_options: PipelineCompilationOptions::default(),
-            cache: None,
-        });
+        let normalize_compute_pipeline =
+            device.create_compute_pipeline(&ComputePipelineDescriptor {
+                label: Some("normalize-compute-pipeline"),
+                layout: Some(&data_pipeline_layout),
+                module: &device.create_shader_module(include_wgsl!("wgsl/normalize.wgsl")),
+                entry_point: Some("main"),
+                compilation_options: PipelineCompilationOptions::default(),
+                cache: None,
+            });
+
         {
             let mut compute_pass = encoder.begin_compute_pass(&ComputePassDescriptor {
                 label: Some("normalize-compute-pass"),
                 ..Default::default()
             });
             let num_dispatchers = (self.node_connections.gpu_data.len().div_ceil(64) + 10) as u32;
-            compute_pass.set_pipeline(&compute_pipeline);
+            compute_pass.set_pipeline(&normalize_compute_pipeline);
             compute_pass.set_bind_group(0, &data_bg, &[]);
             compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
         }
-        encoder.copy_buffer_to_buffer(
-            &buffer_data.inner_result_buffer,
-            0,
-            &buffer_data.outer_result_buffer,
-            0,
-            buffer_data.inner_result_buffer.size(),
-        );
-
         self.adapter.queue.submit([encoder.finish()]);
+
+        let sort_compute_pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
+            label: Some("normalize-sort-compute-pipeline"),
+            layout: Some(&data_pipeline_layout),
+            module: &device.create_shader_module(include_wgsl!("wgsl/normalize.wgsl")),
+            entry_point: Some("sort"),
+            compilation_options: PipelineCompilationOptions::default(),
+            cache: None,
+        });
+        for i in 0..(self.node_connections.gpu_data.len() + 10) {
+            let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
+                label: Some("normalize-encoder"),
+            });
+            let even_odd = if i % 2 == 0 {
+                0 as u32 //Odd
+            } else {
+                1 as u32 //Even
+            };
+            {
+                let mut compute_pass = encoder.begin_compute_pass(&ComputePassDescriptor {
+                    label: Some("normalize-compute-pass"),
+                    ..Default::default()
+                });
+                self.adapter.queue.write_buffer(
+                    &buffer_data.sort_toggle_buffer,
+                    0,
+                    bytemuck::bytes_of(&even_odd),
+                );
+                compute_pass.set_pipeline(&sort_compute_pipeline);
+                compute_pass.set_bind_group(0, &data_bg, &[]);
+                compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
+            }
+            encoder.copy_buffer_to_buffer(
+                &buffer_data.inner_result_buffer,
+                0,
+                &buffer_data.outer_result_buffer,
+                0,
+                buffer_data.inner_result_buffer.size(),
+            );
+            self.adapter.queue.submit([encoder.finish()]);
+        }
         let result = {
             let (tx, rx) = crossbeam::channel::bounded(1);
 
@@ -207,10 +263,8 @@ impl Normalize {
                 .expect("unuable to read received buffer in normalize");
             let buffer_result = buffer_data.outer_result_buffer.get_mapped_range(..);
             let gpu_data: &[GpuNormalizeValue] = bytemuck::cast_slice(&buffer_result);
-            let mut gpu_data = gpu_data.to_vec();
-            // Offload to GPU
-            gpu_data.par_sort_by(|a, b| b.total.partial_cmp(&a.total).unwrap());
-            NormalizeResult { gpu_data: gpu_data }
+            let gpu_data = gpu_data.to_vec();
+            NormalizeResult { gpu_data }
         };
         buffer_data.outer_result_buffer.unmap();
         Ok(result)
@@ -239,7 +293,7 @@ pub mod test_gpu_normalize {
             .unwrap();
         let sample_data_reader = std::fs::File::options()
             .read(true)
-            .open("storage/sample-data/sample-data.json")
+            .open("storage/sample-data/graph_10000.json")
             .unwrap();
         let node_connections_data =
             serde_json::from_reader::<_, NodeConnectionsResult>(node_connections_reader).unwrap();
@@ -252,6 +306,7 @@ pub mod test_gpu_normalize {
         let result = normalize.execute().await;
         assert!(result.is_ok(), "{:?}", result.err());
         let result = result.unwrap();
+        println!("Nodes: {}", result.gpu_data.len());
         let mut writer = std::fs::File::options()
             .create(true)
             .truncate(true)
