@@ -9,7 +9,7 @@ pub struct NodeCoordinate {
     pub radius: u32,
     pub x: f32,
     pub y: f32,
-    pub node_id: String,
+    pub node_id: u32,
 }
 
 impl NodeCoordinate {

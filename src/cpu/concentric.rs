@@ -1,7 +1,6 @@
 use crate::Timer;
 use crate::cpu::{NodeAngle, NodeConnections, NodeCoordinate, Normalize, Ring};
-use crate::entities::{NodeConnectionsData, NormalizeData, RingData};
-use crate::{Edge, Node};
+use crate::entities::{Edge, Node, NodeConnectionsData, NormalizeData, RingData};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 

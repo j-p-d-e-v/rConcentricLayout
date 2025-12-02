@@ -1,5 +1,4 @@
-use crate::entities::{NodeConnectionValue, NodeConnectionsData};
-use crate::{Edge, Node};
+use crate::entities::{Edge, Node, NodeConnectionValue, NodeConnectionsData};
 use rayon::iter::IntoParallelRefIterator;
 use rayon::iter::ParallelIterator;
 use serde::{Deserialize, Serialize};
@@ -16,7 +15,7 @@ impl NodeConnections {
             .map(|node| {
                 let total = edges
                     .par_iter()
-                    .filter(|item| item.source == node.id || item.target == node.id)
+                    .filter(|item| item.source_id == node.id || item.target_id == node.id)
                     .count() as u32;
                 NodeConnectionValue {
                     node_id: node.id.clone(),

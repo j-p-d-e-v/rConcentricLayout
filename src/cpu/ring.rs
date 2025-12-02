@@ -29,7 +29,7 @@ impl Ring {
             .map(|capacity| {
                 let start = capacity.range[0] as usize;
                 let end = capacity.range[1] as usize;
-                let nodes: Vec<String> = data
+                let nodes: Vec<u32> = data
                     .values
                     .get(start..end)
                     .unwrap_or_default()

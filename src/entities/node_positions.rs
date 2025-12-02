@@ -1,6 +1,8 @@
+use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Pod, Zeroable)]
+#[repr(C)]
 pub struct NodePositionData {
     pub index: u32,
     pub radius: u32,
@@ -10,5 +12,5 @@ pub struct NodePositionData {
     pub cy: f32,
     pub x: f32,
     pub y: f32,
-    pub node_id: String,
+    pub node_id: u32,
 }

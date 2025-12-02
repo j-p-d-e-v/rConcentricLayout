@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeConnectionValue {
-    pub node_id: String,
+    pub node_id: u32,
     pub total: u32,
 }
 

@@ -1,6 +1,4 @@
 use anyhow::anyhow;
-use bytemuck::{Pod, Zeroable};
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
@@ -12,37 +10,23 @@ use wgpu::{
 };
 
 use crate::{
-    entities::{NodePositionData, RingCapacity},
-    gpu::{GpuAdapter, GpuData, normalize::NormalizeResult},
+    entities::{Edge, Node, NodePositionData, RingCapacity},
+    gpu::{GpuAdapter, normalize::NormalizeResult},
 };
-
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Pod, Zeroable)]
-#[repr(C)]
-pub struct GpuNodePositionData {
-    pub index: u32,
-    pub radius: u32,
-    pub angle_degree: f32,
-    pub angle_radian: f32,
-    pub cx: f32,
-    pub cy: f32,
-    pub x: f32,
-    pub y: f32,
-    pub node_id: u32,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct NodePositionsResult {
-    pub gpu_data: Vec<GpuNodePositionData>,
-    pub data: Vec<NodePositionData>,
+    pub gpu_data: Vec<NodePositionData>,
 }
 #[derive(Debug)]
 pub struct NodePositions {
-    pub gpu_data: GpuData,
     pub adapter: GpuAdapter,
     pub normalize_result: NormalizeResult,
     pub ring_capacity: Vec<RingCapacity>,
     pub cx: f32,
     pub cy: f32,
+    pub nodes: Vec<Node>,
+    pub edges: Vec<Edge>,
 }
 
 #[derive(Debug)]
@@ -56,28 +40,29 @@ pub struct BufferData {
 
 impl NodePositions {
     pub async fn new(
-        gpu_data: &GpuData,
+        nodes: &Vec<Node>,
+        edges: &Vec<Edge>,
         normalize_result: NormalizeResult,
         cx: Option<f32>,
         cy: Option<f32>,
     ) -> anyhow::Result<Self> {
         let adapter = GpuAdapter::new().await?;
-        let ring_capacity =
-            RingCapacity::generate(gpu_data.get_gpu_nodes_id().len() as u32, Some(20));
+        let ring_capacity = RingCapacity::generate(nodes.len() as u32, Some(20));
         Ok(Self {
             adapter,
             ring_capacity,
             normalize_result,
             cx: cx.unwrap_or(0.0),
             cy: cy.unwrap_or(0.0),
-            gpu_data: gpu_data.clone(),
+            nodes: nodes.to_owned(),
+            edges: edges.to_owned(),
         })
     }
 
     pub async fn get_buffer_data(&self) -> BufferData {
         let device = &self.adapter.device;
-        let total_nodes = self.gpu_data.get_gpu_nodes_id().len();
-        let result_size = (std::mem::size_of::<GpuNodePositionData>() * total_nodes) as u64;
+        let total_nodes = self.nodes.len();
+        let result_size = (std::mem::size_of::<NodePositionData>() * total_nodes) as u64;
         let normalize_gpu_data_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("ring-normalize-gpu-data"),
             contents: bytemuck::cast_slice(&self.normalize_result.gpu_data),
@@ -247,34 +232,9 @@ impl NodePositions {
             let outer_result_buffer = self
                 .get_buffer_view(&buffer_data.outer_result_buffer)
                 .await?;
-            let gpu_data: &[GpuNodePositionData] = bytemuck::cast_slice(&outer_result_buffer);
-
-            let values = gpu_data
-                .par_iter()
-                .map(|item| {
-                    let node = self
-                        .gpu_data
-                        .get_gpu_nodes()
-                        .get(&item.node_id)
-                        .expect("unable to mapped gpu node to node id(string) in normalize");
-                    let node_id = node.id.to_string();
-                    NodePositionData {
-                        node_id,
-                        cx: item.cx,
-                        cy: item.cy,
-                        x: item.x,
-                        y: item.y,
-                        index: item.index,
-                        radius: item.radius,
-                        angle_degree: item.angle_degree,
-                        angle_radian: item.angle_radian,
-                    }
-                })
-                .collect::<Vec<NodePositionData>>();
-
+            let gpu_data: &[NodePositionData] = bytemuck::cast_slice(&outer_result_buffer);
             NodePositionsResult {
                 gpu_data: gpu_data.to_vec(),
-                data: values,
             }
         };
         buffer_data.outer_result_buffer.unmap();
@@ -285,7 +245,6 @@ impl NodePositions {
 #[cfg(test)]
 pub mod test_gpu_node_positions {
     use super::*;
-    use crate::{Edge, Node};
     use serde::Deserialize;
 
     #[tokio::test]
@@ -301,14 +260,19 @@ pub mod test_gpu_node_positions {
             .unwrap();
         let sample_data_reader = std::fs::File::options()
             .read(true)
-            .open("storage/sample-data/sample-data.json")
+            .open("storage/sample-data/nodes_100_full_mesh.json")
             .unwrap();
         let normalize_data =
             serde_json::from_reader::<_, NormalizeResult>(normalize_reader).unwrap();
         let sample_data = serde_json::from_reader::<_, SampleData>(sample_data_reader).unwrap();
-        let gpu_data = GpuData::new(&sample_data.nodes, &sample_data.edges);
-        let gpu_data = gpu_data.unwrap();
-        let positions = NodePositions::new(&gpu_data, normalize_data, None, None).await;
+        let positions = NodePositions::new(
+            &sample_data.nodes,
+            &sample_data.edges,
+            normalize_data,
+            None,
+            None,
+        )
+        .await;
         assert!(positions.is_ok(), "{:?}", positions.err());
         let positions = positions.unwrap();
         let result = positions.execute().await;

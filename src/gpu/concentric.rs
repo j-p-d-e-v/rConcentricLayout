@@ -1,9 +1,8 @@
 use crate::Timer;
-use crate::entities::NodePositionData;
+use crate::entities::{Edge, Node, NodePositionData};
 use crate::gpu::node_positions::{NodePositions, NodePositionsResult};
 use crate::gpu::normalize::{Normalize, NormalizeResult};
-use crate::gpu::{GpuData, NodeConnections, NodeConnectionsResult};
-use crate::{Edge, Node};
+use crate::gpu::{NodeConnections, NodeConnectionsResult};
 use serde::{Deserialize, Serialize};
 use tokio::time::Instant;
 
@@ -12,7 +11,6 @@ pub struct GpuConcentric {
     pub timer: Timer,
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
-    pub gpu_data: GpuData,
     pub node_connections: NodeConnectionsResult,
     pub normalized_values: NormalizeResult,
     pub node_positions: NodePositionsResult,
@@ -38,7 +36,7 @@ impl GpuConcentric {
         self.normalize_node_connections().await?;
         self.calculate_node_positions().await?;
         let elapsed = timer.elapsed();
-        let data = self.node_positions.data.clone();
+        let data = self.node_positions.gpu_data.to_owned();
         self.timer = Timer {
             micros: Some(elapsed.as_micros()),
             millis: Some(elapsed.as_millis()),
@@ -53,14 +51,14 @@ impl GpuConcentric {
 
     /// 1. Count the number of edges/paths per node
     pub async fn count_node_connections(&mut self) -> anyhow::Result<()> {
-        let node_connections = NodeConnections::new(&self.gpu_data).await?;
+        let node_connections = NodeConnections::new(&self.nodes, &self.edges).await?;
         self.node_connections = node_connections.execute().await?;
         Ok(())
     }
 
     /// 2. Normalize Node Connections
     pub async fn normalize_node_connections(&mut self) -> anyhow::Result<()> {
-        let normalize = Normalize::new(&self.gpu_data, &self.node_connections).await?;
+        let normalize = Normalize::new(&self.nodes, &self.edges, &self.node_connections).await?;
         self.normalized_values = normalize.execute().await?;
         Ok(())
     }
@@ -68,7 +66,8 @@ impl GpuConcentric {
     /// 3. Calculate Node Positions (Ring, Angle, and Coordinates)
     pub async fn calculate_node_positions(&mut self) -> anyhow::Result<()> {
         let node_positions = NodePositions::new(
-            &self.gpu_data,
+            &self.nodes,
+            &self.edges,
             self.normalized_values.clone(),
             self.default_cx,
             self.default_cy,

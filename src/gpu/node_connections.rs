@@ -1,4 +1,7 @@
-use crate::gpu::{GpuAdapter, GpuData};
+use crate::{
+    entities::{Edge, Node},
+    gpu::GpuAdapter,
+};
 use anyhow::anyhow;
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
@@ -27,7 +30,8 @@ pub struct NodeConnectionsResult {
 #[derive(Debug)]
 pub struct NodeConnections {
     pub adapter: GpuAdapter,
-    pub gpu_data: GpuData,
+    pub nodes: Vec<Node>,
+    pub edges: Vec<Edge>,
 }
 
 #[derive(Debug)]
@@ -41,11 +45,12 @@ pub struct BufferData {
 }
 
 impl NodeConnections {
-    pub async fn new(gpu_data: &GpuData) -> anyhow::Result<Self> {
+    pub async fn new(nodes: &Vec<Node>, edges: &Vec<Edge>) -> anyhow::Result<Self> {
         let adapter = GpuAdapter::new().await?;
         Ok(Self {
             adapter,
-            gpu_data: gpu_data.to_owned(),
+            nodes: nodes.to_owned(),
+            edges: edges.to_owned(),
         })
     }
 
@@ -53,12 +58,12 @@ impl NodeConnections {
         let device = &self.adapter.device;
         let nodes_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("node-connections-nodes-data"),
-            contents: bytemuck::cast_slice(self.gpu_data.get_gpu_nodes_id()),
+            contents: bytemuck::cast_slice(&self.nodes),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
         let edges_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("node-connections-edges-data"),
-            contents: bytemuck::cast_slice(self.gpu_data.get_gpu_edges()),
+            contents: bytemuck::cast_slice(&self.edges),
             usage: BufferUsages::COPY_DST | BufferUsages::STORAGE,
         });
         let inner_min_max_buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -66,8 +71,7 @@ impl NodeConnections {
             contents: bytemuck::cast_slice(&[0u32; 2]),
             usage: BufferUsages::COPY_SRC | BufferUsages::STORAGE,
         });
-        let result_size = (std::mem::size_of::<GpuNodeConnectionValue>()
-            * self.gpu_data.get_gpu_nodes_id().len()) as u64;
+        let result_size = (std::mem::size_of::<GpuNodeConnectionValue>() * self.nodes.len()) as u64;
 
         let inner_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("node-connections-innert-result"),
@@ -216,7 +220,7 @@ impl NodeConnections {
                     label: Some(&compute_pass_label),
                     ..Default::default()
                 });
-                let num_dispatchers = self.gpu_data.gpu_nodes_id.len().div_ceil(64) as u32 + 10;
+                let num_dispatchers = self.nodes.len().div_ceil(64) as u32 + 10;
                 compute_pass.set_bind_group(0, &data_bg_group, &[]);
                 compute_pass.set_pipeline(&compute_pipeline);
                 compute_pass.dispatch_workgroups(num_dispatchers, 1, 1);
@@ -260,12 +264,9 @@ impl NodeConnections {
 
 #[cfg(test)]
 pub mod test_gpu_node_connections {
+    use super::*;
+    use crate::gpu::node_connections::NodeConnections;
     use serde::Deserialize;
-
-    use crate::{
-        Edge, Node,
-        gpu::{data::GpuData, node_connections::NodeConnections},
-    };
 
     #[tokio::test]
     async fn test_node_connections() {
@@ -277,12 +278,10 @@ pub mod test_gpu_node_connections {
 
         let reader = std::fs::File::options()
             .read(true)
-            .open("storage/sample-data/graph_10000.json")
+            .open("storage/sample-data/nodes_100_full_mesh.json")
             .unwrap();
         let sample_data = serde_json::from_reader::<_, SampleData>(reader).unwrap();
-        let gpu_data = GpuData::new(&sample_data.nodes, &sample_data.edges);
-        let gpu_data = gpu_data.unwrap();
-        let node_connections = NodeConnections::new(&gpu_data).await;
+        let node_connections = NodeConnections::new(&sample_data.nodes, &sample_data.edges).await;
         assert!(node_connections.is_ok(), "{:?}", node_connections.err());
         let node_connections = node_connections.unwrap();
         let result = node_connections.execute().await;

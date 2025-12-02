@@ -9,7 +9,7 @@ struct NodeId {
 }
 struct NormalizeValue {
     node_id: u32,
-    total: f32
+    value: f32
 }
 struct RingData {
     index: u32,

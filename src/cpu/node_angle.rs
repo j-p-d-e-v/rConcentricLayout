@@ -9,7 +9,7 @@ use crate::entities::RingData;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NodeAngle {
-    pub node: String,
+    pub node: u32,
     pub angle_radian: f32,
     pub angle_degree: f32,
     pub ring: u32,

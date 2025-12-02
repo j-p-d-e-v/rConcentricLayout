@@ -1,6 +1,6 @@
 struct NormalizedValue {
     node_id: u32,
-    total: f32
+    value: f32
 }
 struct NodeConnectionValue {
     node_id: u32,
@@ -39,7 +39,7 @@ fn sort(
         var left_item =  normalized_values[left_index];
         var right_item = normalized_values[right_index];
         if((sort_toggle == 0 && left_index % 2 == 0) || (sort_toggle == 1 && left_index % 2 == 1)){
-            if(left_item.total < right_item.total) {
+            if(left_item.value < right_item.value) {
                 normalized_values[right_index] = left_item;
                 normalized_values[left_index] = right_item;
             }

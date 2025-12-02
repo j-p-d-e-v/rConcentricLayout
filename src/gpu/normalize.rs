@@ -1,7 +1,7 @@
-use crate::gpu::{
-    GpuAdapter, GpuData, NodeConnectionsResult, node_connections::GpuNodeConnectionValue,
+use crate::{
+    entities::{Edge, Node, NormalizeValue},
+    gpu::{GpuAdapter, NodeConnectionsResult, node_connections::GpuNodeConnectionValue},
 };
-use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 use wgpu::{
     BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
@@ -13,14 +13,7 @@ use wgpu::{
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct NormalizeResult {
-    pub gpu_data: Vec<GpuNormalizeValue>,
-}
-
-#[derive(Debug, Copy, Clone, Pod, Zeroable, Serialize, Deserialize)]
-#[repr(C)]
-pub struct GpuNormalizeValue {
-    pub node_id: u32,
-    pub total: f32,
+    pub gpu_data: Vec<NormalizeValue>,
 }
 
 #[derive(Debug)]
@@ -35,19 +28,22 @@ pub struct BufferData {
 #[derive(Debug)]
 pub struct Normalize {
     pub adapter: GpuAdapter,
-    pub gpu_data: GpuData,
+    pub nodes: Vec<Node>,
+    pub edges: Vec<Edge>,
     pub node_connections: NodeConnectionsResult,
 }
 
 impl Normalize {
     pub async fn new(
-        gpu_data: &GpuData,
+        nodes: &Vec<Node>,
+        edge: &Vec<Edge>,
         node_connections: &NodeConnectionsResult,
     ) -> anyhow::Result<Self> {
         let adapter = GpuAdapter::new().await?;
         Ok(Self {
             adapter,
-            gpu_data: gpu_data.clone(),
+            nodes: nodes.to_owned(),
+            edges: edge.to_owned(),
             node_connections: node_connections.to_owned(),
         })
     }
@@ -80,8 +76,7 @@ impl Normalize {
             contents: bytemuck::bytes_of(&0u32),
             usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
         });
-        let result_size = self.gpu_data.get_gpu_nodes_id().len() as u64
-            * std::mem::size_of::<GpuNormalizeValue>() as u64;
+        let result_size = self.nodes.len() as u64 * std::mem::size_of::<NormalizeValue>() as u64;
         let inner_result_buffer = device.create_buffer(&BufferDescriptor {
             label: Some("normalize-inner-result"),
             size: result_size,
@@ -262,7 +257,7 @@ impl Normalize {
                 .expect("unable to receive buffer in normalize")
                 .expect("unuable to read received buffer in normalize");
             let buffer_result = buffer_data.outer_result_buffer.get_mapped_range(..);
-            let gpu_data: &[GpuNormalizeValue] = bytemuck::cast_slice(&buffer_result);
+            let gpu_data: &[NormalizeValue] = bytemuck::cast_slice(&buffer_result);
             let gpu_data = gpu_data.to_vec();
             NormalizeResult { gpu_data }
         };
@@ -273,12 +268,9 @@ impl Normalize {
 
 #[cfg(test)]
 pub mod test_gpu_normalize {
+    use super::*;
+    use crate::gpu::{NodeConnectionsResult, normalize::Normalize};
     use serde::Deserialize;
-
-    use crate::{
-        Edge, Node,
-        gpu::{NodeConnectionsResult, data::GpuData, normalize::Normalize},
-    };
 
     #[tokio::test]
     async fn test_normalize() {
@@ -293,14 +285,17 @@ pub mod test_gpu_normalize {
             .unwrap();
         let sample_data_reader = std::fs::File::options()
             .read(true)
-            .open("storage/sample-data/graph_10000.json")
+            .open("storage/sample-data/nodes_100_full_mesh.json")
             .unwrap();
         let node_connections_data =
             serde_json::from_reader::<_, NodeConnectionsResult>(node_connections_reader).unwrap();
         let sample_data = serde_json::from_reader::<_, SampleData>(sample_data_reader).unwrap();
-        let gpu_data = GpuData::new(&sample_data.nodes, &sample_data.edges);
-        let gpu_data = gpu_data.unwrap();
-        let normalize = Normalize::new(&gpu_data, &node_connections_data).await;
+        let normalize = Normalize::new(
+            &sample_data.nodes,
+            &sample_data.edges,
+            &node_connections_data,
+        )
+        .await;
         assert!(normalize.is_ok(), "{:?}", normalize.err());
         let normalize = normalize.unwrap();
         let result = normalize.execute().await;

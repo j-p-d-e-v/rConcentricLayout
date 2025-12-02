@@ -5,7 +5,7 @@ use std::f32::consts::PI;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RingData {
     pub index: u32, //Sequential Index
-    pub nodes: Vec<String>,
+    pub nodes: Vec<u32>,
     pub radius: u32,
 }
 
