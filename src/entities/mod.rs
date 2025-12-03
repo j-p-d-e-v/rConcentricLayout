@@ -9,4 +9,4 @@ pub use node::Node;
 pub use node_connections::{NodeConnectionValue, NodeConnectionsData};
 pub use node_positions::NodePositionData;
 pub use normalize::{NormalizeData, NormalizeValue};
-pub use ring::{RingCapacity, RingData};
+pub use ring::RingCapacity;

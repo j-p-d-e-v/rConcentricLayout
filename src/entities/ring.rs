@@ -1,13 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct RingData {
-    pub index: u32, //Sequential Index
-    pub nodes: Vec<u32>,
-    pub radius: u32,
-}
 
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 #[repr(C)]

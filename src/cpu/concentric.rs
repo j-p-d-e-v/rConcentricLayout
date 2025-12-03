@@ -1,6 +1,6 @@
 use crate::Timer;
-use crate::cpu::{NodeAngle, NodeConnections, NodeCoordinate, Normalize, Ring};
-use crate::entities::{Edge, Node, NodeConnectionsData, NormalizeData, RingData};
+use crate::cpu::{NodeConnections, NodePositions, Normalize};
+use crate::entities::{Edge, Node, NodeConnectionsData, NodePositionData, NormalizeData};
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 
@@ -11,9 +11,7 @@ pub struct CpuConcentric {
     pub edges: Vec<Edge>,
     pub node_connections: NodeConnectionsData,
     pub normalized_values: NormalizeData,
-    pub node_angles: Vec<NodeAngle>,
-    pub node_coordinates: Vec<NodeCoordinate>,
-    pub rings: Vec<RingData>,
+    pub node_positions: Vec<NodePositionData>,
     pub default_cx: Option<f32>,
     pub default_cy: Option<f32>,
 }
@@ -22,7 +20,7 @@ pub struct CpuConcentric {
 pub struct CpuConcetricData {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,
-    pub coordinates: Vec<NodeCoordinate>,
+    pub coordinates: Vec<NodePositionData>,
 }
 
 impl CpuConcentric {
@@ -34,11 +32,9 @@ impl CpuConcentric {
         let timer = Instant::now();
         self.count_node_connections()?;
         self.normalize_node_connections()?;
-        self.calculate_rings()?;
-        self.calculate_nodes_angle()?;
-        self.calculate_nodes_coordinate()?;
+        self.calculate_node_positions()?;
         let elapsed = timer.elapsed();
-        let data = self.node_coordinates.clone();
+        let data = self.node_positions.clone();
         self.timer = Timer {
             micros: Some(elapsed.as_micros()),
             millis: Some(elapsed.as_millis()),
@@ -65,26 +61,10 @@ impl CpuConcentric {
         Ok(())
     }
 
-    /// 3. Ring Indexs
-    pub fn calculate_rings(&mut self) -> anyhow::Result<()> {
-        self.rings = Ring::get(&self.normalized_values)?;
-        Ok(())
-    }
-
-    /// 4. Nodes Angle
-    pub fn calculate_nodes_angle(&mut self) -> anyhow::Result<()> {
-        self.node_angles = NodeAngle::get(&self.rings)?;
-        Ok(())
-    }
-
-    /// 5. Nodes Coordinate
-    pub fn calculate_nodes_coordinate(&mut self) -> anyhow::Result<()> {
-        self.node_coordinates = NodeCoordinate::get(
-            &self.node_angles,
-            &self.rings,
-            self.default_cx,
-            self.default_cy,
-        )?;
+    /// 3. Node Posititons
+    pub fn calculate_node_positions(&mut self) -> anyhow::Result<()> {
+        self.node_positions =
+            NodePositions::get(&self.normalized_values, self.default_cx, self.default_cy);
         Ok(())
     }
 }

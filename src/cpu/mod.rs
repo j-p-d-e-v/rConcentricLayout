@@ -1,12 +1,8 @@
 pub mod concentric;
-pub mod node_angle;
 pub mod node_connections;
-pub mod node_coordinate;
+pub mod node_positions;
 pub mod normalize;
-pub mod ring;
 pub use concentric::CpuConcentric;
-pub use node_angle::NodeAngle;
 pub use node_connections::NodeConnections;
-pub use node_coordinate::NodeCoordinate;
+pub use node_positions::NodePositions;
 pub use normalize::Normalize;
-pub use ring::Ring;

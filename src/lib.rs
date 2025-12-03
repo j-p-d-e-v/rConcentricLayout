@@ -24,20 +24,15 @@ pub mod test_concentric_layout {
             edges: Vec<Edge>,
         }
         let samples = [
-            // "concentric_nonmesh_star_100.json",                       //0
-            // "sample-data-100-nodes-full-mesh-15-rings-neighbor.json", //1
-            // "sample-data-100-nodes-full-mesh-15-rings.json",          //2
-            // "sample-data-100-nodes-full-mesh.json",                   //3-
-            // "sample-data-cytoscape.json",                             //4
-            "sample-data.json", //5
-                                // "sample_graph_1000.json",                                 //6
-                                // "sample_tree_1000.json",                                  //7
-                                // "sample_scalefree_1000.json",                             //8
-                                // "graph_10000.json",                                       //9,
-                                // "graph_20000.json",                                       //10,
-                                // "graph_50000.json",                                       //11,
-                                // "graph_100000.json",                                      //12
-                                //"telco_realistic_1000_nodes.json", //13
+            "nodes_10_full_mesh.json",
+            "nodes_100_full_mesh.json",
+            // "nodes_1000_random.json",
+            // "nodes_2000_random.json",
+            // "nodes_5000_random.json",
+            // "nodes_10000_random.json",
+            // "nodes_50000_random.json",
+            // "nodes_100000_random.json",
+            // "telco_sample.json",
         ];
         let mut benchmark: Vec<String> = Vec::new();
         for total_threads in [2, 4, 8, 16, 32] {
@@ -125,8 +120,8 @@ pub mod test_concentric_layout {
             "nodes_5000_random.json",
             "nodes_10000_random.json",
             "nodes_50000_random.json",
-            //"nodes_100000_random.json",
-            // "telco_sample.json",
+            "nodes_100000_random.json",
+            "telco_sample.json",
         ];
         let mut benchmark: Vec<String> = Vec::new();
         for total_threads in [16] {
