@@ -26,13 +26,13 @@ pub mod test_concentric_layout {
         let samples = [
             "nodes_10_full_mesh.json",
             "nodes_100_full_mesh.json",
-            // "nodes_1000_random.json",
-            // "nodes_2000_random.json",
-            // "nodes_5000_random.json",
-            // "nodes_10000_random.json",
-            // "nodes_50000_random.json",
-            // "nodes_100000_random.json",
-            // "telco_sample.json",
+            "nodes_1000_random.json",
+            "nodes_2000_random.json",
+            "nodes_5000_random.json",
+            "nodes_10000_random.json",
+            "nodes_50000_random.json",
+            "nodes_100000_random.json",
+            "telco_sample.json",
         ];
         let mut benchmark: Vec<String> = Vec::new();
         for total_threads in [2, 4, 8, 16, 32] {

@@ -26,7 +26,7 @@ struct RingData {
 @group(0) @binding(1) var<storage,read> ring_capacity: array<RingCapacity>;
 @group(0) @binding(2) var<storage,read> cx_cy: vec2<f32>;
 @group(0) @binding(3) var<storage,read_write> result: array<RingData>;
-const PI: f32 = 3.141592653589793;
+const PI: f32 = radians(180.0); //3.141592653589793;
 
 @compute
 @workgroup_size(64)
