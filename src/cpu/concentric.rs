@@ -16,19 +16,18 @@ pub struct CpuConcentric {
     pub default_cy: Option<f32>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CpuConcetricData {
-    pub nodes: Vec<Node>,
-    pub edges: Vec<Edge>,
-    pub coordinates: Vec<NodePositionData>,
-}
-
 impl CpuConcentric {
-    pub fn new(data: CpuConcentric) -> Self {
-        data
+    pub fn new(nodes: &Vec<Node>, edges: &Vec<Edge>, cx: &Option<f32>, cy: &Option<f32>) -> Self {
+        Self {
+            nodes: nodes.to_owned(),
+            edges: edges.to_owned(),
+            default_cx: cx.to_owned(),
+            default_cy: cy.to_owned(),
+            ..Default::default()
+        }
     }
 
-    pub fn get(&mut self) -> anyhow::Result<CpuConcetricData> {
+    pub fn get(&mut self) -> anyhow::Result<Vec<NodePositionData>> {
         let timer = Instant::now();
         self.count_node_connections()?;
         self.normalize_node_connections()?;
@@ -40,29 +39,25 @@ impl CpuConcentric {
             millis: Some(elapsed.as_millis()),
             seconds: Some(elapsed.as_secs()),
         };
-        Ok(CpuConcetricData {
-            nodes: self.nodes.clone(),
-            edges: self.edges.clone(),
-            coordinates: data,
-        })
+        Ok(data)
     }
 
     /// 1. Count the number of edges/paths per node
-    pub fn count_node_connections(&mut self) -> anyhow::Result<()> {
+    fn count_node_connections(&mut self) -> anyhow::Result<()> {
         let result = NodeConnections::get(&self.nodes, &self.edges)?;
         self.node_connections = result.clone();
         Ok(())
     }
 
     /// 2. Normalize Node Connections
-    pub fn normalize_node_connections(&mut self) -> anyhow::Result<()> {
+    fn normalize_node_connections(&mut self) -> anyhow::Result<()> {
         let result = Normalize::get(&self.node_connections)?;
         self.normalized_values = result.clone();
         Ok(())
     }
 
     /// 3. Node Posititons
-    pub fn calculate_node_positions(&mut self) -> anyhow::Result<()> {
+    fn calculate_node_positions(&mut self) -> anyhow::Result<()> {
         self.node_positions =
             NodePositions::get(&self.normalized_values, self.default_cx, self.default_cy);
         Ok(())
