@@ -25,7 +25,7 @@ pub mod test_concentric_layout {
             "nodes_5000_random.json",
             "nodes_10000_random.json",
             "nodes_50000_random.json",
-            // "nodes_100000_random.json",
+            "nodes_100000_random.json",
             "telco_sample.json",
         ]
         .iter()
