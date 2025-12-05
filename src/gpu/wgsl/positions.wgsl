@@ -41,10 +41,14 @@ fn main(
     let ring_radius = capacity.radius;
     let start_index = capacity.range[0];
     let end_index = capacity.range[1];
-    let max_nodes = capacity.max_nodes; //Total Nodes Per Index
-    let step_angle = 360.0 / f32(max_nodes);
     var node_index:u32 = 0;
-
+    var total_nodes: u32 = 0; //The actual nodes total in a certain range
+    for(var i = start_index; i < end_index; i++) {
+        if(i < arrayLength(&normalize_data)) {
+            total_nodes++;
+        }
+    }
+    let step_angle = 360.0 / f32(total_nodes);
     for(var i = start_index; i < end_index; i++) {
         let angle_degree = f32(node_index) * step_angle;
         let angle_radian = angle_degree * (PI / 180.0 );

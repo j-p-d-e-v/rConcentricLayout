@@ -16,17 +16,22 @@ pub mod test_concentric_layout {
     use std::{fs::create_dir_all, io::Write, path::Path};
     use tabular::{Row, Table};
 
-    const SAMPLE_DATA: [&str; 7] = [
-        "nodes_10_full_mesh.json",
-        "nodes_100_full_mesh.json",
-        "nodes_1000_random.json",
-        "nodes_2000_random.json",
-        "nodes_5000_random.json",
-        "nodes_10000_random.json",
-        // "nodes_50000_random.json",
-        // "nodes_100000_random.json",
-        "telco_sample.json",
-    ];
+    fn get_sample_data_files() -> Vec<String> {
+        [
+            "nodes_10_full_mesh.json",
+            "nodes_100_full_mesh.json",
+            "nodes_1000_random.json",
+            "nodes_2000_random.json",
+            "nodes_5000_random.json",
+            "nodes_10000_random.json",
+            "nodes_50000_random.json",
+            // "nodes_100000_random.json",
+            "telco_sample.json",
+        ]
+        .iter()
+        .map(|value| value.to_string())
+        .collect()
+    }
 
     #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct SampleData {
@@ -39,6 +44,7 @@ pub mod test_concentric_layout {
         nodes: Vec<Node>,
         edges: Vec<Edge>,
         positions: Vec<NodePositionData>,
+        timer: Timer,
     }
     fn get_sample_datasets(file_path: &str) -> SampleData {
         let reader = std::fs::File::options()
@@ -69,6 +75,7 @@ pub mod test_concentric_layout {
         file_name: &str,
         nodes: &Vec<Node>,
         edges: &Vec<Edge>,
+        timer: &Timer,
         data: &Vec<NodePositionData>,
     ) {
         create_dir_all(format!("storage/output/{}", computing_kind)).unwrap();
@@ -84,6 +91,7 @@ pub mod test_concentric_layout {
                 nodes: nodes.to_owned(),
                 edges: edges.to_owned(),
                 positions: data.to_owned(),
+                timer: timer.to_owned(),
             },
         )
         .unwrap();
@@ -93,8 +101,11 @@ pub mod test_concentric_layout {
         let mut table = Table::new(
             "| {:^} threads | {:<} | {:^} nodes | {:^} edges | {:^}s | {:^}ms | {:^}us |",
         );
-        for num_threads in [2, 4, 8, 16, 32] {
-            for sample_file in SAMPLE_DATA.iter() {
+        for num_threads in [
+            //2, 4, 8, 16, 32
+            16,
+        ] {
+            for sample_file in get_sample_data_files().iter() {
                 let sample_data = get_sample_datasets(sample_file);
                 let mut layout = ConcentricLayout::new(
                     &ComputingConfig::Cpu(num_threads as usize),
@@ -114,6 +125,7 @@ pub mod test_concentric_layout {
                     sample_file,
                     &sample_data.nodes,
                     &sample_data.edges,
+                    &timer,
                     &data,
                 );
                 table = table.with_row(
@@ -134,7 +146,7 @@ pub mod test_concentric_layout {
     #[tokio::test]
     async fn test_gpu_based() {
         let mut table = Table::new("| {:<} | {:^} nodes | {:^} edges | {:^}s | {:^}ms | {:^}us |");
-        for sample_file in SAMPLE_DATA.iter() {
+        for sample_file in get_sample_data_files().iter() {
             let sample_data = get_sample_datasets(sample_file);
             let mut layout = ConcentricLayout::new(
                 &ComputingConfig::Gpu,
@@ -154,6 +166,7 @@ pub mod test_concentric_layout {
                 sample_file,
                 &sample_data.nodes,
                 &sample_data.edges,
+                &timer,
                 &data,
             );
             table = table.with_row(
