@@ -42,6 +42,9 @@ impl ConcentricLayout {
         }
     }
 
+    /// Run/Execute the calculation using CPU.
+    /// Parameters:
+    /// - num_threads: Total number of threads to spawn for parallel computing.
     async fn run_cpu(&mut self, num_threads: usize) -> anyhow::Result<Vec<NodePositionData>> {
         let builder = ThreadPoolBuilder::new().num_threads(num_threads).build()?;
         builder.install(|| -> anyhow::Result<Vec<NodePositionData>> {
@@ -52,6 +55,8 @@ impl ConcentricLayout {
         })
     }
 
+    /// Run/Execute the calculation using GPU. Number of threads is determine automatically based on the number of nodes
+    /// multiple by default workgroup size 64. See gpu/wgsl to adjust the configured workgroup_size.
     async fn run_gpu(&mut self) -> anyhow::Result<Vec<NodePositionData>> {
         let mut layout = GpuConcentric::new(&self.nodes, &self.edges, &self.cx, &self.cy);
         let result = layout.get().await?;
@@ -59,6 +64,7 @@ impl ConcentricLayout {
         Ok(result)
     }
 
+    /// The function to call to execute cpu or gpu computation.
     pub async fn execute(&mut self) -> anyhow::Result<Vec<NodePositionData>> {
         match self.config {
             ComputingConfig::Cpu(num_threads) => self.run_cpu(num_threads).await,
