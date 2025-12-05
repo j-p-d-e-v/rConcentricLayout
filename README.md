@@ -1,6 +1,6 @@
-# (WorkInProgress) rConcentricLayout
+# rConcentricLayout
 
-Rust-powered, GPU-optional concentric layout engine for Cytoscape.js.
+Rust-powered, GPU-optional concentric layout engine that use for Graph Visualization Libraries like Cytoscape.js.
 Offload layout computation from the browser to a fast Rust backend, WebAssembly module, or GPU-accelerated WGPU pipeline.
 
 Built for graph visualization, network topology tools, and high-performance layout workloads.
@@ -9,10 +9,8 @@ Built for graph visualization, network topology tools, and high-performance layo
 
 - ✅ Pure Rust concentric layout core
 - ✅ Supports single-ring and multi-ring computations
-- ✅ Ready for integration with Cytoscape.js
 - ✅ Designed for CPU parallelism (Rayon / custom threading)
 - ✅ Optional GPU acceleration via WGPU
-- ✅ WASM target for browser-based execution
 - ✅ Clean Rust API for layout computation
 - ✅ Can be embedded in backend services or compiled to WASM
 ---
@@ -21,21 +19,10 @@ Built for graph visualization, network topology tools, and high-performance layo
 
 `rConcentricLayout` allows you to:
 
-- Offload Cytoscape.js layout computation to a Rust backend
+- Execute layout computation to a Rust backend
 - Run layout logic in WASM for fast, client-side graph visualization
 - Use GPU acceleration when performing large or complex layout calculations
 - Integrate with visualization platforms and network dashboards efficiently
-
----
-
-## 📦 Installation
-(Coming soon)
-
-```
-cargo add rconcentriclayout
-```
-
-WASM and NPM bindings will be added later.
 
 ---
 
@@ -47,30 +34,12 @@ WASM and NPM bindings will be added later.
 2. Angular spacing
 3. Radius scaling
 4. Parallel CPU passes or GPU passes
-5. Outputting `(x, y)` positions in a JSON structure compatible with Cytoscape.js
+5. Outputting `(x, y)` positions in a JSON structure compatible with Graph Visualization Libraries like Cytoscape.js
 
 The layout can be computed in:
 
-- Rust (synchronous)
 - Rust with multi-threaded CPU parallelism
 - Rust with GPU acceleration (via WGPU compute shader)
-- WASM for browser usage
-
----
-
-## 🗺️ Roadmap
-
-1. ✅ Develop one-ring calculation
-2. ✅ Develop multiple-ring calculation
-3. 🔄 Develop CPU-based parallel computation
-4. 🔄 Test in Cytoscape.js
-5. ✅ Develop GPU-based computation (WGPU)
-6. 🔄 Test GPU mode in Cytoscape.js
-7. 🔜 Develop WASM version
-8. 🔜 Test WASM version in Cytoscape.js
-9. 🔜 Create performance benchmarks
-
-> ✅ = done • 🔄 = in progress • 🔜 = upcoming
 
 ---
 
@@ -148,5 +117,4 @@ Open an issue if you'd like to request features or propose improvements.
 
 ---
 
-
-MIT or Apache-2.0 (choose your preferred license)
+MIT
