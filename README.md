@@ -1,11 +1,10 @@
 # rConcentricLayout
-
 Rust-powered, GPU-optional concentric layout engine that use for Graph Visualization Libraries like Cytoscape.js.
 Offload layout computation from the browser to a fast Rust backend, WebAssembly module, or GPU-accelerated WGPU pipeline.
 
 Built for graph visualization, network topology tools, and high-performance layout workloads.
 
-## ✨ Features (Planned & Ongoing)
+## ✨ Features
 
 - ✅ Pure Rust concentric layout core
 - ✅ Supports single-ring and multi-ring computations
@@ -13,6 +12,7 @@ Built for graph visualization, network topology tools, and high-performance layo
 - ✅ Optional GPU acceleration via WGPU
 - ✅ Clean Rust API for layout computation
 - ✅ Can be embedded in backend services or compiled to WASM
+
 ---
 
 ## 🚀 Purpose
